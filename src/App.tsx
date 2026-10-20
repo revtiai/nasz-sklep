@@ -13,6 +13,7 @@ import Trade from './pages/Trade.tsx';
 import RequestPage from './pages/Request.tsx';
 import Account from './pages/Account.tsx';
 import Checkout from './pages/Checkout.tsx';
+import { ShopOrders, TrackOrder } from './pages/Orders.tsx';
 
 export default function App() {
   return (
@@ -44,6 +45,8 @@ function Shell() {
       case 'request': return <RequestPage />;
       case 'account': return <Account />;
       case 'checkout': return <Checkout />;
+      case 'order': return <TrackOrder id={arg} />;
+      case 'shop-orders': return <ShopOrders />;
       default: return <Home />;
     }
   })();
@@ -219,7 +222,7 @@ function Basket() {
             {lines.length > 0 && (
               <div className="border-t-2 border-ink/10 px-5 pt-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] grid gap-3">
                 <div className="flex justify-between items-baseline"><span className="text-lg font-semibold">{t('Total', 'Razem')}</span><span className="font-display font-extrabold text-3xl">{gbp(total)}</span></div>
-                <a href="#/checkout" onClick={() => setBasketOpen(false)} className={btn.red}>{t('Choose collection or delivery', 'Wybierz odbiór lub dostawę')}</a>
+                <a href="#/checkout" onClick={() => setBasketOpen(false)} className={btn.red}>{t('Order for collection', 'Zamów z odbiorem')}</a>
               </div>
             )}
           </motion.div>
@@ -251,6 +254,7 @@ function Footer() {
     ['#/request', t('Request a product', 'Zamów produkt')],
     ['#/account', t('My account', 'Moje konto')],
     [SHOP.facebook, 'Facebook'],
+    ['#/shop-orders', t('For the shop: orders', 'Dla sklepu: zamówienia')],
   ];
   return (
     <footer className="relative bg-gradient-to-b from-cream via-paper to-paper overflow-hidden flex flex-col min-h-[680px] md:min-h-[min(100svh,860px)]">

@@ -1,6 +1,6 @@
 import { motion, useReducedMotion, type Variants } from 'motion/react';
 import { Minus, Plus } from 'lucide-react';
-import type { CSSProperties, ReactNode } from 'react';
+import { useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { useStore } from './store.tsx';
 import type { Product } from './data.ts';
 
@@ -13,38 +13,66 @@ export function useT() {
   return (en: string, pl: string) => (lang === 'pl' ? pl : en);
 }
 
-const RING = 'M40 12 C100 -2 196 2 208 36 C218 62 170 84 106 85 C40 86 2 70 3 44 C4 20 44 6 100 5';
+/** The rounded frame from the shop sign. Drawn as one continuous line that starts and ends at the
+ *  gap in the bottom edge, so it can draw itself in and leave room for a label, exactly like the sign. */
+function framePath(w: number, h: number, sw: number, gap: number) {
+  const i = sw / 2;
+  const r = Math.min((h - sw) * 0.42, (w - sw) / 2);
+  const L = i, R = w - i, T = i, B = h - i, cx = w / 2;
+  const g = gap / 2;
+  return `M${cx - g} ${B} L${L + r} ${B} A${r} ${r} 0 0 1 ${L} ${B - r} L${L} ${T + r} A${r} ${r} 0 0 1 ${L + r} ${T} L${R - r} ${T} A${r} ${r} 0 0 1 ${R} ${T + r} L${R} ${B - r} A${r} ${r} 0 0 1 ${R - r} ${B} L${cx + g} ${B}`;
+}
 
-/** The red ring, drawn by hand around the name, from the circle on the shop's own logo. */
-export function Ring({ className = '', draw = true, colour = '#D7141A', delay = 0.15 }: { className?: string; draw?: boolean; colour?: string; delay?: number }) {
+export function Frame({ draw = true, colour = '#D7141A', gap = 0, delay = 0.15 }: { draw?: boolean; colour?: string; gap?: number; delay?: number }) {
   const reduce = useReducedMotion();
+  const ref = useRef<SVGSVGElement>(null);
+  const [box, setBox] = useState<[number, number, number] | null>(null);
+  useLayoutEffect(() => {
+    const el = ref.current?.parentElement;
+    if (!el) return;
+    const measure = () => {
+      const fs = parseFloat(getComputedStyle(el).fontSize);
+      setBox([el.offsetWidth, el.offsetHeight, Math.max(1.5, fs * 0.075)]);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
   const animate = draw && !reduce;
   return (
-    <svg viewBox="0 0 212 88" preserveAspectRatio="none" className={`absolute pointer-events-none ${className}`} aria-hidden="true">
-      <motion.path
-        d={RING}
-        fill="none"
-        stroke={colour}
-        strokeWidth={3}
-        strokeLinecap="round"
-        vectorEffect="non-scaling-stroke"
-        initial={animate ? { pathLength: 0, opacity: 0 } : false}
-        animate={{ pathLength: 1, opacity: 1 }}
-        transition={{ pathLength: { duration: 1.1, delay, ease: [0.65, 0, 0.35, 1] }, opacity: { duration: 0.01, delay } }}
-      />
+    <svg ref={ref} className="absolute inset-0 w-full h-full overflow-visible pointer-events-none" aria-hidden="true">
+      {box && (
+        <motion.path
+          d={framePath(box[0], box[1], box[2], gap ? gap * (box[2] / 0.075) : 0)}
+          fill="none"
+          stroke={colour}
+          strokeWidth={box[2]}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          initial={animate ? { pathLength: 0 } : false}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 1.3, delay, ease: [0.65, 0, 0.35, 1] }}
+        />
+      )}
     </svg>
   );
 }
 
-/** The shop's name exactly as on the sign, circled in red. This is the logo. */
+/** The shop's name exactly as on the sign: red, inside the rounded red frame. This is the logo. */
 export function Wordmark({ className = '', light = false, place = false, ring = true, draw = true }: { className?: string; light?: boolean; place?: boolean; ring?: boolean; draw?: boolean }) {
+  const colour = light ? '#FFF8EF' : '#D7141A';
   return (
-    <span className={`relative inline-flex flex-col items-center leading-none ${ring ? 'px-[0.62em] py-[0.36em]' : ''} ${className}`}>
-      {ring && <Ring className="inset-0 w-full h-full" draw={draw} colour={light ? '#FFF8EF' : '#D7141A'} />}
-      <span className={`relative whitespace-nowrap font-display font-extrabold tracking-[-0.03em] ${light ? 'text-cream' : 'text-red'}`} style={{ fontVariationSettings: '"wdth" 88' }}>
+    <span className={`relative inline-flex flex-col items-center leading-none ${ring ? 'px-[0.5em] pt-[0.2em] pb-[0.26em]' : ''} ${className}`}>
+      {ring && <Frame draw={draw} colour={colour} gap={place ? 2.55 : 0} />}
+      <span className={`relative whitespace-nowrap font-display font-extrabold tracking-[-0.02em] ${light ? 'text-cream' : 'text-red'}`}>
         Nasz Sklep
       </span>
-      {place && <span className={`relative mt-[0.16em] text-[0.3em] font-bold tracking-[0.32em] uppercase ${light ? 'text-cream/85' : 'text-ink/70'}`}>Southampton</span>}
+      {place && (
+        <span className={`absolute left-1/2 -translate-x-1/2 bottom-0 translate-y-1/2 px-[0.5em] text-[0.22em] font-bold tracking-[0.24em] uppercase whitespace-nowrap ${light ? 'text-cream' : 'text-red'}`}>
+          Southampton
+        </span>
+      )}
     </span>
   );
 }
@@ -54,10 +82,10 @@ export function Badge({ size = 160, className = '' }: { size?: number; className
   return (
     <svg viewBox="0 0 200 200" width={size} height={size} className={className} role="img" aria-label="Nasz Sklep">
       <circle cx="100" cy="100" r="100" fill="#FFF8EF" />
-      <path d="M100 14 C150 12 188 48 186 100 C184 152 148 188 98 186 C46 184 12 148 14 96 C16 50 52 18 112 14" fill="none" stroke="#D7141A" strokeWidth="7" strokeLinecap="round" />
-      <text x="100" y="94" textAnchor="middle" fontFamily="'Bricolage Grotesque Variable', 'Arial Black', sans-serif" fontWeight="800" fontSize="50" letterSpacing="-2" fill="#D7141A" style={{ fontVariationSettings: '"wdth" 85' }}>Nasz</text>
-      <text x="100" y="140" textAnchor="middle" fontFamily="'Bricolage Grotesque Variable', 'Arial Black', sans-serif" fontWeight="800" fontSize="50" letterSpacing="-2" fill="#D7141A" style={{ fontVariationSettings: '"wdth" 85' }}>Sklep</text>
-      <text x="100" y="164" textAnchor="middle" fontFamily="'Inter Variable', Arial, sans-serif" fontWeight="700" fontSize="11" letterSpacing="3.4" fill="#1C1917">SOUTHAMPTON</text>
+      <rect x="22" y="44" width="156" height="112" rx="46" fill="none" stroke="#D7141A" strokeWidth="5" />
+      <text x="100" y="96" textAnchor="middle" fontFamily="'Bricolage Grotesque Variable', 'Arial Black', sans-serif" fontWeight="800" fontSize="44" letterSpacing="-1.5" fill="#D7141A" style={{ fontVariationSettings: '"wdth" 85' }}>Nasz</text>
+      <text x="100" y="138" textAnchor="middle" fontFamily="'Bricolage Grotesque Variable', 'Arial Black', sans-serif" fontWeight="800" fontSize="44" letterSpacing="-1.5" fill="#D7141A" style={{ fontVariationSettings: '"wdth" 85' }}>Sklep</text>
+      <rect x="54" y="150" width="92" height="12" fill="#FFF8EF" /><text x="100" y="160" textAnchor="middle" fontFamily="'Inter Variable', Arial, sans-serif" fontWeight="700" fontSize="10" letterSpacing="2.6" fill="#D7141A">SOUTHAMPTON</text>
     </svg>
   );
 }

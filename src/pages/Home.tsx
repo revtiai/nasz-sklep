@@ -75,14 +75,14 @@ function Hero() {
             ))}
           </h1>
           <motion.p initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55, duration: 0.7, ease }} className="mt-6 text-[1.2rem] md:text-[1.35rem] text-ink/75 max-w-xl leading-relaxed">
-            {t('Polish and Eastern European groceries from St Mary’s Road. Order online to collect or have it delivered, or open a trade account and buy by the case.', 'Polskie i wschodnioeuropejskie produkty z St Mary’s Road. Zamów online z odbiorem lub dostawą albo załóż konto hurtowe i kupuj na kartony.')}
+            {t('Polish and Eastern European groceries from St Mary’s Road. Order online and collect from the shop, paying online or at the counter. Buying for a business? Order by the case.', 'Polskie i wschodnioeuropejskie produkty z St Mary’s Road. Zamów online i odbierz w sklepie, płacąc online lub przy ladzie. Kupujesz dla firmy? Zamawiaj na kartony.')}
           </motion.p>
           <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.65, duration: 0.7, ease }} className="mt-8 flex flex-col sm:flex-row gap-3">
             <a href="#/shop" className={btn.red}><ShoppingBasket className="w-5 h-5" aria-hidden="true" />{t('Start shopping', 'Zacznij zakupy')}</a>
             <a href="#/trade" className={btn.light}><Building2 className="w-5 h-5" aria-hidden="true" />{t('Trade & bulk buying', 'Zakupy hurtowe')}</a>
           </motion.div>
           <motion.ul initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.85 }} className="mt-8 grid sm:grid-cols-3 gap-3 text-[0.95rem] font-semibold">
-            {[[Clock, t('Open 7 days', 'Otwarte 7 dni')], [Truck, t('Collect or delivery', 'Odbiór lub dostawa')], [PackageSearch, t('We order in for you', 'Sprowadzimy na zamówienie')]].map(([I, s], k) => {
+            {[[Clock, t('Open 7 days', 'Otwarte 7 dni')], [Truck, t('Order and collect', 'Zamów i odbierz')], [PackageSearch, t('We order in for you', 'Sprowadzimy na zamówienie')]].map(([I, s], k) => {
               const Icon = I as typeof Clock;
               return <li key={k} className="flex items-center gap-2"><Icon className="w-5 h-5 text-red shrink-0" aria-hidden="true" />{s as string}</li>;
             })}
@@ -139,7 +139,7 @@ function Hero() {
 function Doors() {
   const t = useT();
   const doors = [
-    { href: '#/shop', title: t('Shopping for home', 'Zakupy do domu'), body: t('Single items at shop prices. Collect from St Mary’s Road or get it delivered.', 'Pojedyncze produkty w cenach sklepowych. Odbiór na St Mary’s Road lub dostawa.'), img: 'fb/veg-tomatoes.jpg', tone: 'from-red to-[#b30f14]', icon: ShoppingBasket },
+    { href: '#/shop', title: t('Shopping for home', 'Zakupy do domu'), body: t('Order online, we pack it, you collect from St Mary’s Road. Pay online or in the shop.', 'Zamów online, spakujemy, odbierzesz na St Mary’s Road. Płatność online lub w sklepie.'), img: 'fb/veg-tomatoes.jpg', tone: 'from-red to-[#b30f14]', icon: ShoppingBasket },
     { href: '#/trade', title: t('Trade & bulk', 'Hurt dla firm'), body: t('For shops, restaurants and caterers. Case prices, regular orders and an account that remembers what you buy.', 'Dla sklepów, restauracji i cateringu. Ceny za karton, stałe zamówienia i konto, które pamięta Twoje zakupy.'), img: 'fb/meat-shelf.jpg', tone: 'from-[#a3101a] to-[#6e0b10]', icon: Building2 },
   ];
   return (
@@ -302,7 +302,7 @@ function TradeSteps() {
     { icon: Building2, h: t('Open a trade account', 'Załóż konto hurtowe'), b: t('Tell us about your shop, café or restaurant. We check and approve every account ourselves.', 'Opowiedz nam o swojej firmie. Każde konto zatwierdzamy sami.'), img: 'fb/meat-shelf.jpg' },
     { icon: ShoppingBasket, h: t('Order by the case', 'Zamawiaj na kartony'), b: t('See trade prices on every product and add whole cases in one tap.', 'Widzisz ceny hurtowe i dodajesz całe kartony jednym kliknięciem.'), img: 'fb/deli-kabanosy.jpg' },
     { icon: RefreshCw, h: t('Set up a regular order', 'Ustaw stałe zamówienie'), b: t('The same list every week or fortnight. Change, pause or skip it any time.', 'Ta sama lista co tydzień lub dwa. Zmień, wstrzymaj lub pomiń w każdej chwili.'), img: 'fb/veg-tomatoes.jpg' },
-    { icon: CalendarClock, h: t('Collect or have it delivered', 'Odbiór lub dostawa'), b: t('Pick up from St Mary’s Road or choose a delivery day that suits you.', 'Odbierz na St Mary’s Road albo wybierz dzień dostawy.'), img: 'fb/meat-cuts.jpg' },
+    { icon: CalendarClock, h: t('Collect, or delivery by arrangement', 'Odbiór lub dostawa po uzgodnieniu'), b: t('We pack your cases for pick-up at St Mary’s Road. Regular trade deliveries can be arranged.', 'Pakujemy kartony do odbioru na St Mary’s Road. Stałe dostawy hurtowe do uzgodnienia.'), img: 'fb/meat-cuts.jpg' },
   ];
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] });
   const [active, setActive] = useState(0);

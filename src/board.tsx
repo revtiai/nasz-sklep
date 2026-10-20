@@ -51,9 +51,9 @@ function Board() {
         </header>
 
         <div className="grid md:grid-cols-2 gap-5">
-          <Card title="1 · The logo: the name, circled">
+          <Card title="1 · The logo: exactly as on the shopfront">
             <div className="rounded-2xl bg-cream p-10 grid place-items-center min-h-[260px]"><Wordmark className="text-[5rem]" place /></div>
-            <p className="mt-5 text-ink/75 text-[1.05rem]">The shop’s own name, unchanged, with the circle from its original logo drawn in red around it. On the website the ring draws itself around the name as the page opens.</p>
+            <p className="mt-5 text-ink/75 text-[1.05rem]">The shop’s own name in red inside the rounded red frame from the sign above the door, with Southampton set into the bottom line. On the website the frame draws itself around the name as the page opens.</p>
           </Card>
           <Card title="2 · Versions">
             <div className="grid grid-cols-2 gap-4">
@@ -62,7 +62,7 @@ function Board() {
               <div className="rounded-2xl bg-paper grid place-items-center p-4"><Badge size={130} /></div>
               <div className="rounded-2xl bg-cream grid place-items-center p-4"><img src={`${BASE}favicon.svg`} alt="" className="w-16 h-16" /></div>
             </div>
-            <p className="mt-5 text-ink/75 text-[1.05rem]">Red or ink backgrounds use the cream version. The round badge is the profile picture for Facebook, Instagram and WhatsApp; the small circle is the browser icon.</p>
+            <p className="mt-5 text-ink/75 text-[1.05rem]">Red or ink backgrounds use the cream version. The round badge is the profile picture for Facebook, Instagram and WhatsApp; the framed N is the browser icon.</p>
           </Card>
         </div>
 

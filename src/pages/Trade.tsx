@@ -15,7 +15,7 @@ export default function Trade() {
     [RefreshCw, t('Regular orders', 'Stałe zamówienia'), t('Weekly or fortnightly. Pause or change it whenever you like.', 'Co tydzień lub co dwa. Wstrzymaj lub zmień kiedy chcesz.')],
     [PackageSearch, t('Request products', 'Zamawianie produktów'), t('Ask us to stock what you need and track the request.', 'Poproś o produkt i śledź prośbę.')],
     [Heart, t('Your usual list', 'Twoja lista'), t('Save the things you always buy.', 'Zapisz to, co kupujesz zawsze.')],
-    [Truck, t('Delivery days', 'Dni dostaw'), t('Collect from the shop or choose a delivery day.', 'Odbiór w sklepie lub wybrany dzień dostawy.')],
+    [Truck, t('Packed for pick-up', 'Gotowe do odbioru'), t('Collect your cases from the shop. Regular deliveries by arrangement.', 'Odbierz kartony w sklepie. Stałe dostawy do uzgodnienia.')],
   ] as const;
   return (
     <>
