@@ -24,18 +24,18 @@ export function ProductCard({ p, className = '' }: { p: Product; className?: str
         <a href={`#/product/${p.id}`} className="font-display font-extrabold text-[1.2rem] md:text-[1.3rem] leading-[1.1] mt-0.5 py-1 -my-1 hover:text-red">{name}</a>
         <p className="text-[0.9rem] text-ink/60 leading-snug mt-1">{sub}</p>
         <p className="text-[0.85rem] text-ink/55 mt-1">{trade ? t(`Case of ${p.caseQty}`, `Karton ${p.caseQty} szt.`) : p.size}</p>
-        <div className="mt-auto pt-4 flex items-end justify-between gap-2 flex-wrap">
-          <div>
-            <p className="font-display font-extrabold text-[1.6rem] leading-none">{gbp(trade ? p.casePrice : p.price)}{p.unit === 'kg' && !trade && <span className="text-base font-bold text-ink/55">/kg</span>}</p>
-            {trade && <p className="text-[0.8rem] text-ink/55 mt-1">{gbp(p.casePrice / p.caseQty)} {t('each', 'za szt.')}</p>}
+        <div className="mt-auto pt-4">
+          <p className="font-display font-extrabold text-[1.6rem] leading-none">{gbp(trade ? p.casePrice : p.price)}{p.unit === 'kg' && !trade && <span className="text-base font-bold text-ink/55">/kg</span>}</p>
+          {trade && <p className="text-[0.8rem] text-ink/55 mt-1">{gbp(p.casePrice / p.caseQty)} {t('each', 'za szt.')}</p>}
+          <div className="mt-3">
+            {qty === 0 ? (
+              <button onClick={() => add(p)} className={`press w-full inline-flex items-center justify-center gap-1.5 rounded-full min-h-12 px-4 font-bold ${trade ? 'bg-ink text-cream' : 'bg-red text-cream'}`} aria-label={`${t('Add', 'Dodaj')} ${name}`}>
+                <Plus className="w-5 h-5" aria-hidden="true" />{trade ? t('Add case', 'Dodaj karton') : t('Add', 'Dodaj')}
+              </button>
+            ) : (
+              <Stepper wide qty={qty} label={name} dec={() => add(p, -1)} inc={() => add(p)} />
+            )}
           </div>
-          {qty === 0 ? (
-            <button onClick={() => add(p)} className={`press inline-flex items-center gap-1.5 rounded-full min-h-12 px-4 font-bold ${trade ? 'bg-ink text-cream' : 'bg-red text-cream'}`} aria-label={`${t('Add', 'Dodaj')} ${name}`}>
-              <Plus className="w-5 h-5" aria-hidden="true" />{trade ? t('Add case', 'Dodaj karton') : t('Add', 'Dodaj')}
-            </button>
-          ) : (
-            <Stepper qty={qty} label={name} dec={() => add(p, -1)} inc={() => add(p)} />
-          )}
         </div>
       </div>
       </div>

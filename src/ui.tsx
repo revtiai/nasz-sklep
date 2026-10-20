@@ -173,9 +173,9 @@ export function ProductImage({ p, className = '' }: { p: Product; className?: st
   );
 }
 
-export function Stepper({ qty, dec, inc, label }: { qty: number; dec: () => void; inc: () => void; label: string }) {
+export function Stepper({ qty, dec, inc, label, wide = false }: { qty: number; dec: () => void; inc: () => void; label: string; wide?: boolean }) {
   return (
-    <div className="inline-flex items-center rounded-full bg-cream border-2 border-ink h-12">
+    <div className={`${wide ? 'flex w-full justify-between' : 'inline-flex'} items-center rounded-full bg-cream border-2 border-ink h-12`}>
       <button onClick={dec} className="press w-12 h-12 grid place-items-center" aria-label={`Remove one ${label}`}><Minus className="w-5 h-5" /></button>
       <span className="min-w-7 text-center font-bold text-lg tabular-nums" aria-live="polite">{qty}</span>
       <button onClick={inc} className="press w-12 h-12 grid place-items-center" aria-label={`Add one ${label}`}><Plus className="w-5 h-5" /></button>

@@ -21,7 +21,8 @@ const COLOURS = [
 ] as const;
 
 const CHAPTERS = [['brand', '01', 'Brand'], ['social', '02', 'Social'], ['desktop', '03', 'Website: computer'], ['phone', '04', 'Website: phone'], ['ui', '05', 'Web UI']] as const;
-const A = (f: string) => `${BASE}assets/${f}`;
+declare const __ASSET_VERSION__: string;
+const A = (f: string) => `${BASE}assets/${f}?v=${__ASSET_VERSION__}`;
 const ZIP = A('nasz-sklep-brand-assets.zip');
 
 function Get({ file, label = 'Download', light = false }: { file: string; label?: string; light?: boolean }) {
@@ -86,7 +87,7 @@ function LogoReplay() {
 }
 
 function Board() {
-  const sample = PRODUCTS.find((p) => p.id === 'sos-lowicz')!;
+  const cards = ['kabanosy', 'sos-lowicz', 'zywiec', 'tchibo'].map((id) => PRODUCTS.find((p) => p.id === id)!).filter(Boolean);
   const posts: [string, string][] = [
     ['social/post-order-online-collect.png', 'Order online, collect in store'],
     ['social/post-smokehouse-meats.png', 'Smokehouse meats'],
@@ -221,8 +222,8 @@ function Board() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 [&>*]:min-w-0">
           {[['web/phone-home.png', 'Home'], ['web/phone-shop.png', 'Shop'], ['web/phone-product.png', 'Product'], ['web/phone-checkout.png', 'Checkout: collect from the shop'], ['web/phone-order-ready.png', 'Order ready to collect'], ['web/phone-trade-account.png', 'Trade account'], ['web/phone-request.png', 'Request a product']].map(([f, t]) => (
             <figure key={f} className="min-w-0">
-              <div className="mx-auto w-full max-w-[250px] aspect-[390/844] rounded-[2.2rem] bg-ink p-2 shadow-[0_30px_60px_-34px_rgba(0,0,0,.7)]">
-                <img src={A(f)} alt={t} loading="lazy" className="w-full h-full rounded-[1.75rem] object-cover object-top" />
+              <div className="mx-auto w-full max-w-[250px] rounded-[2.2rem] bg-ink p-[7px] shadow-[0_30px_60px_-34px_rgba(0,0,0,.7)]">
+                <img src={A(f)} alt={t} loading="lazy" decoding="async" className="block w-full h-auto aspect-[390/844] rounded-[1.8rem] bg-cream" />
               </div>
               <figcaption className="mt-3 flex flex-col items-center gap-2 text-center"><span className="font-semibold leading-tight">{t}</span><Get file={f} /></figcaption>
             </figure>
@@ -252,38 +253,44 @@ function Board() {
             <div className="mt-5 flex flex-wrap items-center gap-4"><Stepper qty={2} label="demo" dec={() => undefined} inc={() => undefined} /><span className="inline-flex items-center gap-1.5 rounded-full min-h-12 px-4 font-bold bg-red text-cream"><Plus className="w-5 h-5" />Add</span></div>
           </Block>
         </div>
-        <div className="grid md:grid-cols-[300px_1fr] gap-6 [&>*]:min-w-0">
-          <Block label="Product card">
-            <motion.ul initial="hidden" whileInView="show" viewport={{ once: true }} variants={{ hidden: {}, show: {} }} className="max-w-[260px] mx-auto"><ProductCard p={sample} /></motion.ul>
-          </Block>
-          <div className="grid gap-6 [&>*]:min-w-0">
-            <Block label="Labels">
-              <div className="flex flex-wrap gap-2">
-                <span className="rounded-full px-3 py-1 text-sm font-bold bg-leaf text-cream">Paid online</span>
-                <span className="rounded-full px-3 py-1 text-sm font-bold bg-gold">Take £8.98</span>
-                <span className="rounded-full px-3 py-1 text-sm font-bold bg-ink text-cream">Trade</span>
-                <span className="rounded-full px-3 py-1 text-sm font-bold bg-gold">Coming soon</span>
-                <span className="rounded-full px-4 py-2 font-semibold border-2 border-ink/15 bg-white">Smoked meats</span>
-                <span className="rounded-full px-4 py-2 font-semibold border-2 border-red bg-red text-cream">Everything</span>
-              </div>
-            </Block>
-            <Block label="Form field">
-              <label className="grid gap-2 font-semibold max-w-md">Your mobile<input className={field} defaultValue="07700 900123" /></label>
-            </Block>
-            <Block label="Order progress">
-              <ol className="grid grid-cols-4 gap-2 max-w-xl">
-                {['Received', 'Being packed', 'Ready to collect', 'Collected'].map((s, i) => (
-                  <li key={s} className="text-center"><span className={`mx-auto w-11 h-11 rounded-full grid place-items-center ${i <= 2 ? 'bg-red text-cream' : 'bg-white ring-1 ring-ink/10'}`}><Check className="w-5 h-5" /></span><span className={`mt-2 block text-xs sm:text-sm font-bold leading-tight ${i <= 2 ? 'text-red' : 'text-ink/45'}`}>{s}</span></li>
-                ))}
-              </ol>
-            </Block>
-          </div>
-        </div>
-        <Block label="Motion" note="The logo frame draws in once. The hero headline and photos change every few seconds. Sections rise into place as you scroll; offers and the trade steps move with the scroll. Everything stops for people who turn motion off on their phone.">
-          <div className="grid sm:grid-cols-3 gap-3 text-center font-semibold">
-            {['Frame draws in · 1.3 s', 'Headline changes · every 5 s', 'Sections rise · 0.7 s'].map((x) => <div key={x} className="rounded-2xl bg-paper p-5">{x}</div>)}
-          </div>
+        <Block label="Product cards" note="The same card everywhere: photo, Polish and English name, size, price and one big Add button. Offers get the red burst; meat and deli are priced by the kilo.">
+          <motion.ul initial="hidden" whileInView="show" viewport={{ once: true }} variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }} className="flex lg:grid lg:grid-cols-4 gap-3 md:gap-5 overflow-x-auto lg:overflow-visible snap-x snap-mandatory no-scrollbar rounded-[1.6rem] bg-paper p-3 md:p-5">
+            {cards.map((p) => <ProductCard key={p.id} p={p} className="w-[62vw] max-w-[250px] shrink-0 snap-start lg:w-auto lg:max-w-none" />)}
+          </motion.ul>
         </Block>
+        <div className="grid md:grid-cols-2 gap-6 [&>*]:min-w-0">
+          <Block label="Labels">
+            <p className="text-sm font-semibold text-ink/55">On orders</p>
+            <div className="mt-2 flex flex-wrap items-center gap-2">
+              {[['Paid online', 'bg-leaf text-cream'], ['Take £8.98', 'bg-gold text-ink'], ['Trade', 'bg-ink text-cream'], ['Coming soon', 'bg-gold text-ink']].map(([l, c]) => (
+                <span key={l} className={`inline-flex items-center min-h-8 rounded-full px-3 text-sm font-bold leading-none ${c}`}>{l}</span>
+              ))}
+            </div>
+            <p className="mt-5 text-sm font-semibold text-ink/55">Shop filters</p>
+            <div className="mt-2 flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center min-h-12 rounded-full px-5 font-semibold border-2 border-red bg-red text-cream">Everything</span>
+              <span className="inline-flex items-center min-h-12 rounded-full px-5 font-semibold border-2 border-ink/15 bg-white">Smoked meats</span>
+            </div>
+          </Block>
+          <Block label="Form field">
+            <label className="grid gap-2 font-semibold max-w-md">Your mobile<input className={field} defaultValue="07700 900123" /></label>
+            <p className="mt-4 text-ink/70">Big labels above every box, never inside it, so they stay readable while typing.</p>
+          </Block>
+          <Block label="Order progress" note="The customer sees this on their order page. The shop moves each order along from its own screen, and a text goes out when it is ready.">
+            <ol className="grid grid-cols-4 gap-2">
+              {['Received', 'Being packed', 'Ready to collect', 'Collected'].map((s, i) => (
+                <li key={s} className="text-center"><span className={`mx-auto w-11 h-11 rounded-full grid place-items-center ${i <= 2 ? 'bg-red text-cream' : 'bg-white ring-1 ring-ink/15 text-ink/40'}`}><Check className="w-5 h-5" /></span><span className={`mt-2 block text-xs sm:text-sm font-bold leading-tight ${i <= 2 ? 'text-red' : 'text-ink/45'}`}>{s}</span></li>
+              ))}
+            </ol>
+          </Block>
+          <Block label="Motion" note="Everything stops for people who turn motion off on their phone.">
+            <div className="grid gap-2">
+              {[['Logo frame draws in', '1.3 s, once'], ['Headline changes', 'every 5 s'], ['Sections rise into place', '0.7 s']].map(([a, b]) => (
+                <div key={a} className="flex items-center justify-between gap-4 rounded-2xl bg-paper px-5 min-h-14"><span className="font-semibold whitespace-nowrap">{a}</span><span className="text-sm text-ink/60 whitespace-nowrap">{b}</span></div>
+              ))}
+            </div>
+          </Block>
+        </div>
       </Chapter>
 
       <footer className="bg-red text-cream py-14 text-center px-5">
