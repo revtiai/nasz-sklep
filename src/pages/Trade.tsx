@@ -19,8 +19,8 @@ export default function Trade() {
   ] as const;
   return (
     <>
-      <section className="relative bg-ink text-cream overflow-hidden">
-        <img src={img('fb/meat-shelf.jpg')} alt="" className="absolute inset-0 w-full h-full object-cover opacity-25" />
+      <section className="relative text-cream overflow-hidden mx-3 md:mx-6 mt-2 rounded-[2.2rem] bg-gradient-to-br from-red to-[#7d0b10]">
+        <img src={img('fb/meat-shelf.jpg')} alt="" className="absolute inset-0 w-full h-full object-cover opacity-25 mix-blend-luminosity" />
         <div className="relative max-w-7xl mx-auto px-4 md:px-8 py-16 md:py-24">
           <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="font-bold uppercase tracking-[0.2em] text-gold text-[0.8rem]">{t('Trade & bulk', 'Hurt')}</motion.p>
           <motion.h1 initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="mt-3 text-[clamp(2.6rem,7vw,5.2rem)] font-extrabold leading-[0.92] max-w-4xl">{t('Stocking a shop, café or kitchen?', 'Zaopatrujesz sklep, kawiarnię lub kuchnię?')}</motion.h1>
@@ -51,7 +51,7 @@ export default function Trade() {
         </div>
       </section>
 
-      <section id="apply" className="bg-paper scroll-mt-24">
+      <section id="apply" className="scroll-mt-24 bg-gradient-to-b from-cream via-paper to-cream">
         <div className="max-w-3xl mx-auto px-4 md:px-8 py-16 md:py-24">
           <Reveal>
             <h2 className="text-[clamp(2rem,5vw,3.2rem)] font-extrabold leading-[0.95]">{t('Apply for a trade account', 'Wniosek o konto hurtowe')}</h2>

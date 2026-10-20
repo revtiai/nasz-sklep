@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { Home as HomeIcon, MessageCircle, PackageSearch, Search, ShoppingBasket, User, X } from 'lucide-react';
 import { StoreProvider, gbp, product, unitPrice, useRoute, useStore } from './store.tsx';
-import { Mark, ProductImage, Stepper, Wordmark, btn, ease, useT } from './ui.tsx';
+import { ProductImage, Stepper, Wordmark, btn, ease, useT } from './ui.tsx';
+import Lenis from 'lenis';
 import { Southampton } from './Southampton.tsx';
 import { SHOP } from './data.ts';
 import Home from './pages/Home.tsx';
@@ -25,6 +26,14 @@ function Shell() {
   const route = useRoute();
   const reduce = useReducedMotion();
   useEffect(() => { window.scrollTo(0, 0); }, [route]);
+  useEffect(() => {
+    if (reduce) return;
+    const lenis = new Lenis({ duration: 1.15, smoothWheel: true, easing: (x: number) => Math.min(1, 1.001 - Math.pow(2, -10 * x)) });
+    let id = 0;
+    const raf = (time: number) => { lenis.raf(time); id = requestAnimationFrame(raf); };
+    id = requestAnimationFrame(raf);
+    return () => { cancelAnimationFrame(id); lenis.destroy(); };
+  }, [reduce]);
   const [path, arg] = route.split('/').filter(Boolean);
   const page = (() => {
     switch (path) {
@@ -63,7 +72,7 @@ function Splash() {
   useEffect(() => {
     if (!show) return;
     try { sessionStorage.setItem('ns-splash', '1'); } catch { /* ignore */ }
-    const t = setTimeout(() => setShow(false), 1650);
+    const t = setTimeout(() => setShow(false), 1900);
     return () => clearTimeout(t);
   }, [show]);
   return (
@@ -71,14 +80,9 @@ function Splash() {
       {show && (
         <motion.div className="fixed inset-0 z-[100] bg-red grid place-items-center" exit={{ y: '-100%' }} transition={{ duration: 0.7, ease }} aria-hidden="true">
           <div className="text-center">
-            <motion.div initial={{ scale: 0.4, rotate: -12, opacity: 0 }} animate={{ scale: 1, rotate: 0, opacity: 1 }} transition={{ type: 'spring', stiffness: 220, damping: 16 }} className="mx-auto w-24 h-24">
-              <Mark size={96} inverse />
+            <motion.div initial={{ scale: 0.85, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.6, ease }} className="text-[clamp(3rem,11vw,5.5rem)]">
+              <Wordmark light />
             </motion.div>
-            <div className="overflow-hidden mt-5">
-              <motion.div initial={{ y: '110%' }} animate={{ y: 0 }} transition={{ delay: 0.28, duration: 0.6, ease }} className="text-[clamp(2.6rem,9vw,4.5rem)]">
-                <Wordmark light />
-              </motion.div>
-            </div>
             <motion.p initial={{ opacity: 0, letterSpacing: '0.1em' }} animate={{ opacity: 1, letterSpacing: '0.4em' }} transition={{ delay: 0.6, duration: 0.8 }} className="mt-3 text-cream/85 text-sm font-bold uppercase">Southampton</motion.p>
           </div>
         </motion.div>
@@ -105,9 +109,8 @@ function Header({ route }: { route: string }) {
   return (
     <header className={`sticky top-0 z-40 transition-[background-color,box-shadow] ${scrolled ? 'bg-cream/95 backdrop-blur shadow-[0_1px_0_rgb(28_25_23/0.12)]' : 'bg-cream'}`}>
       <div className="max-w-7xl mx-auto px-4 md:px-8 h-[72px] md:h-[84px] flex items-center gap-4">
-        <a href="#/" className="flex items-center gap-3 shrink-0" aria-label="Nasz Sklep, home">
-          <Mark size={44} />
-          <Wordmark className="text-[1.55rem] md:text-[1.8rem]" />
+        <a href="#/" className="flex items-center shrink-0 -ml-2" aria-label="Nasz Sklep, home">
+          <Wordmark className="text-[1.35rem] md:text-[1.6rem]" />
         </a>
         <nav className="hidden lg:flex items-center gap-1 ml-6" aria-label="Main">
           {nav.map(([href, label]) => (
@@ -187,7 +190,7 @@ function Basket() {
               <h2 className="text-2xl font-extrabold">{t('Your basket', 'Twój koszyk')}</h2>
               <button onClick={() => setBasketOpen(false)} className="press w-12 h-12 grid place-items-center rounded-full bg-white border-2 border-ink/15" aria-label={t('Close', 'Zamknij')}><X className="w-6 h-6" /></button>
             </div>
-            <div className="flex-1 overflow-y-auto px-5 py-4">
+            <div className="flex-1 overflow-y-auto px-5 py-4" data-lenis-prevent>
               {lines.length === 0 ? (
                 <div className="text-center py-16">
                   <ShoppingBasket className="w-14 h-14 mx-auto text-ink/25" />
@@ -250,10 +253,9 @@ function Footer() {
     [SHOP.facebook, 'Facebook'],
   ];
   return (
-    <footer className="relative bg-paper overflow-hidden flex flex-col min-h-[640px] md:min-h-[min(100svh,860px)]">
+    <footer className="relative bg-gradient-to-b from-cream via-paper to-paper overflow-hidden flex flex-col min-h-[680px] md:min-h-[min(100svh,860px)]">
       <div className="relative z-10 flex flex-col items-center text-center px-4 pt-14 md:pt-16">
-        <Mark size={56} />
-        <Wordmark className="mt-3 text-[2.4rem] md:text-[3rem]" place />
+        <Wordmark className="text-[2.4rem] md:text-[3rem]" place />
         <p className="mt-4 text-ink/75 max-w-xl">{t('Polish and Eastern European food on St Mary’s Road. For your kitchen, your shop or your restaurant.', 'Polskie i wschodnioeuropejskie jedzenie na St Mary’s Road. Do domu, sklepu i restauracji.')}</p>
         <nav className="mt-8" aria-label="Footer">
           <ul className="grid grid-cols-2 sm:flex sm:flex-wrap justify-center gap-x-2 gap-y-1">
@@ -274,7 +276,7 @@ function Footer() {
         <p className="mt-2 text-xs text-ink/45 max-w-2xl">{t('Design preview by Revti. Products and prices are examples. Pack photos from Open Food Facts (CC BY-SA).', 'Projekt demonstracyjny Revti. Produkty i ceny przykładowe. Zdjęcia opakowań: Open Food Facts (CC BY-SA).')}</p>
         <a href={SHOP.messenger} target="_blank" rel="noreferrer" className="press mt-6 inline-flex items-center gap-2 rounded-full bg-white px-5 min-h-12 font-semibold border-2 border-ink/15"><MessageCircle className="w-5 h-5 text-red" />{t('Message the shop', 'Napisz do sklepu')}</a>
       </div>
-      <Southampton className="relative flex-1 w-full min-h-[300px] mt-[-4vh] pointer-events-none" />
+      <Southampton className="relative flex-1 w-full min-h-[320px] mt-[-4vh] pointer-events-none" focusShopOnMobile />
       
     </footer>
   );

@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import '@fontsource-variable/bricolage-grotesque';
 import '@fontsource-variable/inter';
 import './index.css';
-import { BASE, Burst, Mark, Wordmark, img } from './ui.tsx';
+import { BASE, Badge, Burst, Wordmark, img } from './ui.tsx';
 import { StoreProvider } from './store.tsx';
 import { Southampton } from './Southampton.tsx';
 import { Asset, SIZES } from './social.tsx';
@@ -47,21 +47,22 @@ function Board() {
             <p className="mt-4 text-2xl md:text-4xl font-display font-extrabold max-w-3xl leading-tight">Prawdziwy smak domu. A real taste of home.</p>
             <p className="mt-3 text-cream/85 max-w-2xl text-lg">Polish and Eastern European groceries, 120 St Mary’s Road, Southampton. For homes, shops and kitchens.</p>
           </div>
-          <div className="absolute right-8 bottom-8 hidden md:block"><Mark size={150} inverse /></div>
+          
         </header>
 
         <div className="grid md:grid-cols-2 gap-5">
-          <Card title="1 · The name on the sign stays">
-            <div className="rounded-2xl bg-cream p-10 grid place-items-center"><Wordmark className="text-[5rem]" place /></div>
-            <p className="mt-5 text-ink/75 text-[1.05rem]">No change to the shop sign, the till or the bags. The wordmark is the same red name, set cleanly so it reads well on screens and print.</p>
+          <Card title="1 · The logo: the name, circled">
+            <div className="rounded-2xl bg-cream p-10 grid place-items-center min-h-[260px]"><Wordmark className="text-[5rem]" place /></div>
+            <p className="mt-5 text-ink/75 text-[1.05rem]">The shop’s own name, unchanged, with the circle from its original logo drawn in red around it. On the website the ring draws itself around the name as the page opens.</p>
           </Card>
-          <Card title="2 · New: the NS mark, digital only">
-            <div className="grid grid-cols-3 gap-4 items-center">
-              <div className="rounded-2xl bg-cream grid place-items-center p-6"><Mark size={110} /></div>
-              <div className="rounded-2xl bg-red grid place-items-center p-6"><Mark size={110} inverse /></div>
-              <div className="rounded-2xl bg-ink grid place-items-center p-6"><span className="rounded-full overflow-hidden w-[110px] h-[110px] bg-red grid place-items-center"><Mark size={92} /></span></div>
+          <Card title="2 · Versions">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="rounded-2xl bg-red grid place-items-center p-6 min-h-[140px]"><Wordmark className="text-[2.2rem]" light draw={false} /></div>
+              <div className="rounded-2xl bg-ink grid place-items-center p-6 min-h-[140px]"><Wordmark className="text-[2.2rem]" light draw={false} /></div>
+              <div className="rounded-2xl bg-paper grid place-items-center p-4"><Badge size={130} /></div>
+              <div className="rounded-2xl bg-cream grid place-items-center p-4"><img src={`${BASE}favicon.svg`} alt="" className="w-16 h-16" /></div>
             </div>
-            <p className="mt-5 text-ink/75 text-[1.05rem]">The initials inside the outline of the shop’s own red sign. Used only where the full name is too long: the browser tab, the Facebook and Instagram picture, the phone icon. Nothing to repaint or reprint.</p>
+            <p className="mt-5 text-ink/75 text-[1.05rem]">Red or ink backgrounds use the cream version. The round badge is the profile picture for Facebook, Instagram and WhatsApp; the small circle is the browser icon.</p>
           </Card>
         </div>
 
@@ -116,7 +117,14 @@ function Board() {
           <p className="mt-5 text-ink/75 text-[1.05rem]">Polish first, English underneath. One message per post, a big headline, the red burst for offers.</p>
         </Card>
 
-        <Card title="9 · The online shop">
+        <Card title="9 · Link previews">
+          <div className="grid md:grid-cols-3 gap-4">
+            {['og-home', 'og-shop', 'og-trade', 'og-request', 'og-account', 'og-board'].map((n) => <Scaled key={n} name={n} width={400} />)}
+          </div>
+          <p className="mt-5 text-ink/75 text-[1.05rem]">Each section of the site has its own preview card for WhatsApp, Facebook and Messenger.</p>
+        </Card>
+
+        <Card title="10 · The online shop">
           <div className="grid md:grid-cols-[2fr_1fr_1fr] gap-4 items-start">
             <img src={`${BASE}board/d-home.png`} alt="Website home page on a computer" className="rounded-2xl w-full ring-1 ring-ink/10" />
             <img src={`${BASE}board/m-home.png`} alt="Website on a phone" className="rounded-2xl w-full ring-1 ring-ink/10" />

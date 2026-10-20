@@ -13,27 +13,51 @@ export function useT() {
   return (en: string, pl: string) => (lang === 'pl' ? pl : en);
 }
 
-/** The shop's name, set as on the sign. This is the brand: it does not change. */
-export function Wordmark({ className = '', light = false, place = false }: { className?: string; light?: boolean; place?: boolean }) {
+const RING = 'M40 12 C100 -2 196 2 208 36 C218 62 170 84 106 85 C40 86 2 70 3 44 C4 20 44 6 100 5';
+
+/** The red ring, drawn by hand around the name, from the circle on the shop's own logo. */
+export function Ring({ className = '', draw = true, colour = '#D7141A', delay = 0.15 }: { className?: string; draw?: boolean; colour?: string; delay?: number }) {
+  const reduce = useReducedMotion();
+  const animate = draw && !reduce;
   return (
-    <span className={`inline-flex flex-col leading-none ${className}`}>
-      <span className={`font-display font-extrabold tracking-[-0.03em] ${light ? 'text-cream' : 'text-red'}`} style={{ fontVariationSettings: '"wdth" 88' }}>
+    <svg viewBox="0 0 212 88" preserveAspectRatio="none" className={`absolute pointer-events-none ${className}`} aria-hidden="true">
+      <motion.path
+        d={RING}
+        fill="none"
+        stroke={colour}
+        strokeWidth={3}
+        strokeLinecap="round"
+        vectorEffect="non-scaling-stroke"
+        initial={animate ? { pathLength: 0, opacity: 0 } : false}
+        animate={{ pathLength: 1, opacity: 1 }}
+        transition={{ pathLength: { duration: 1.1, delay, ease: [0.65, 0, 0.35, 1] }, opacity: { duration: 0.01, delay } }}
+      />
+    </svg>
+  );
+}
+
+/** The shop's name exactly as on the sign, circled in red. This is the logo. */
+export function Wordmark({ className = '', light = false, place = false, ring = true, draw = true }: { className?: string; light?: boolean; place?: boolean; ring?: boolean; draw?: boolean }) {
+  return (
+    <span className={`relative inline-flex flex-col items-center leading-none ${ring ? 'px-[0.62em] py-[0.36em]' : ''} ${className}`}>
+      {ring && <Ring className="inset-0 w-full h-full" draw={draw} colour={light ? '#FFF8EF' : '#D7141A'} />}
+      <span className={`relative whitespace-nowrap font-display font-extrabold tracking-[-0.03em] ${light ? 'text-cream' : 'text-red'}`} style={{ fontVariationSettings: '"wdth" 88' }}>
         Nasz Sklep
       </span>
-      {place && <span className={`mt-[0.18em] text-[0.32em] font-bold tracking-[0.32em] uppercase ${light ? 'text-cream/80' : 'text-ink/70'}`}>Southampton</span>}
+      {place && <span className={`relative mt-[0.16em] text-[0.3em] font-bold tracking-[0.32em] uppercase ${light ? 'text-cream/85' : 'text-ink/70'}`}>Southampton</span>}
     </span>
   );
 }
 
-/** Digital-only mark: "NS" on the red sign plaque. For favicons, social avatars and the app icon. */
-export function Mark({ size = 48, className = '', inverse = false }: { size?: number; className?: string; inverse?: boolean }) {
-  const bg = inverse ? '#FFF8EF' : '#D7141A';
-  const fg = inverse ? '#D7141A' : '#FFF8EF';
+/** Square badge for avatars and the favicon: the name stacked inside the red circle. */
+export function Badge({ size = 160, className = '' }: { size?: number; className?: string }) {
   return (
-    <svg viewBox="0 0 64 64" width={size} height={size} className={className} role="img" aria-label="Nasz Sklep">
-      <rect width="64" height="64" rx="16" fill={bg} />
-      <rect x="5" y="5" width="54" height="54" rx="11.5" fill="none" stroke={fg} strokeWidth="2.4" />
-      <text x="32" y="43.5" textAnchor="middle" fontFamily="'Bricolage Grotesque Variable', 'Arial Black', sans-serif" fontWeight="800" fontSize="29" letterSpacing="-1.4" fill={fg} style={{ fontVariationSettings: '"wdth" 80' }}>NS</text>
+    <svg viewBox="0 0 200 200" width={size} height={size} className={className} role="img" aria-label="Nasz Sklep">
+      <circle cx="100" cy="100" r="100" fill="#FFF8EF" />
+      <path d="M100 14 C150 12 188 48 186 100 C184 152 148 188 98 186 C46 184 12 148 14 96 C16 50 52 18 112 14" fill="none" stroke="#D7141A" strokeWidth="7" strokeLinecap="round" />
+      <text x="100" y="94" textAnchor="middle" fontFamily="'Bricolage Grotesque Variable', 'Arial Black', sans-serif" fontWeight="800" fontSize="50" letterSpacing="-2" fill="#D7141A" style={{ fontVariationSettings: '"wdth" 85' }}>Nasz</text>
+      <text x="100" y="140" textAnchor="middle" fontFamily="'Bricolage Grotesque Variable', 'Arial Black', sans-serif" fontWeight="800" fontSize="50" letterSpacing="-2" fill="#D7141A" style={{ fontVariationSettings: '"wdth" 85' }}>Sklep</text>
+      <text x="100" y="164" textAnchor="middle" fontFamily="'Inter Variable', Arial, sans-serif" fontWeight="700" fontSize="11" letterSpacing="3.4" fill="#1C1917">SOUTHAMPTON</text>
     </svg>
   );
 }
@@ -64,7 +88,7 @@ export const staggerItem: Variants = { hidden: { opacity: 0, y: 24, scale: 0.98 
 /** The red price burst, taken from the shop's own offer posters. */
 export function Burst({ children, className = '', style }: { children: ReactNode; className?: string; style?: CSSProperties }) {
   return (
-    <span className={`relative grid place-items-center text-center text-cream font-display font-extrabold leading-[0.95] ${className}`} style={style}>
+    <span className={`${/\babsolute\b/.test(className) ? '' : 'relative '}grid place-items-center text-center text-cream font-display font-extrabold leading-[0.95] ${className}`} style={style}>
       <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full" aria-hidden="true">
         <path
           d={Array.from({ length: 28 }, (_, i) => {

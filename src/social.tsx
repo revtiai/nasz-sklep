@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import '@fontsource-variable/bricolage-grotesque';
 import '@fontsource-variable/inter';
 import './index.css';
-import { Burst, Mark, Wordmark, img } from './ui.tsx';
+import { Badge, Burst, Wordmark, img } from './ui.tsx';
 import { StoreProvider } from './store.tsx';
 import { Southampton } from './Southampton.tsx';
 
@@ -17,12 +17,18 @@ export const SIZES: Record<string, [number, number]> = {
   'post-christmas': [1080, 1350],
   'post-online': [1080, 1350],
   'story-offer': [1080, 1920],
+  'og-home': [1200, 630],
+  'og-shop': [1200, 630],
+  'og-trade': [1200, 630],
+  'og-request': [1200, 630],
+  'og-account': [1200, 630],
+  'og-board': [1200, 630],
 };
 
 function Foot({ dark = false }: { dark?: boolean }) {
   return (
     <div className={`absolute inset-x-0 bottom-0 px-16 pb-14 flex items-center justify-between ${dark ? 'text-cream' : 'text-ink'}`}>
-      <span className="flex items-center gap-4"><Mark size={72} inverse={dark} /><Wordmark className="text-[52px]" light={dark} /></span>
+      <span className="flex items-center"><Wordmark className="text-[50px]" light={dark} draw={false} /></span>
       <span className="text-right text-[26px] font-semibold leading-tight opacity-85">120 St Mary’s Road<br />Southampton</span>
     </div>
   );
@@ -38,16 +44,16 @@ export function Asset({ name }: { name: string }) {
     case 'facebook-cover':
       return (
         <Frame w={w} h={h} className="bg-paper">
-          <div className="absolute inset-x-0 bottom-0 h-[61%]"><Southampton className="w-full h-full" /></div>
-          <div className="absolute left-1/2 -translate-x-1/2 top-[56px] text-center w-[1100px]">
-            <Wordmark className="text-[132px]" />
-            <p className="mt-3 text-[34px] font-bold text-ink">Polskie jedzenie w Southampton · <span className="text-red">Polish food in Southampton</span></p>
+          <div className="absolute inset-x-0 bottom-0 h-[57%]"><Southampton className="w-full h-full" /></div>
+          <div className="absolute left-1/2 -translate-x-1/2 top-[30px] text-center w-[1100px]">
+            <Wordmark className="text-[104px]" draw={false} />
+            <p className="mt-1 text-[32px] font-bold text-ink">Polskie jedzenie w Southampton · <span className="text-red">Polish food in Southampton</span></p>
           </div>
           <div className="absolute right-[150px] top-[48px]"><Burst className="w-[170px] h-[170px] text-[30px] rotate-[8deg]">Hurt<br /><span className="text-[22px]">i detal</span></Burst></div>
         </Frame>
       );
     case 'profile-picture':
-      return <Frame w={w} h={h} className="bg-red grid place-items-center"><Mark size={560} /></Frame>;
+      return <Frame w={w} h={h} className="bg-cream grid place-items-center"><Badge size={720} /></Frame>;
     case 'post-smokehouse':
       return (
         <Frame w={w} h={h} className="bg-ink text-cream">
@@ -133,12 +139,99 @@ export function Asset({ name }: { name: string }) {
             <p className="mt-8 text-[42px] font-semibold leading-tight">Zamów z odbiorem w sklepie lub z dostawą. Our shop is now online.</p>
           </div>
           <div className="absolute left-1/2 -translate-x-1/2 top-[700px] w-[440px] h-[420px] rounded-[60px] bg-white shadow-[0_40px_80px_-40px_rgba(0,0,0,.5)] overflow-hidden">
-            <div className="h-[86px] bg-cream flex items-center gap-4 px-8"><Mark size={52} /><Wordmark className="text-[36px]" /></div>
+            <div className="h-[96px] bg-cream flex items-center px-6"><Wordmark className="text-[34px]" draw={false} /></div>
             <div className="grid grid-cols-2 gap-4 p-6">
               {['p/tymbark.jpg', 'p/ptasie-mleczko.jpg', 'p/lowicz-sos.jpg', 'p/kasza.jpg'].map((s) => <div key={s} className="h-[130px] rounded-3xl bg-paper grid place-items-center"><img src={img(s)} alt="" className="h-[110px] object-contain" /></div>)}
             </div>
           </div>
           <Foot />
+        </Frame>
+      );
+    case 'og-home':
+      return (
+        <Frame w={w} h={h} className="bg-cream">
+          <div className="absolute inset-x-0 bottom-0 h-[30%] opacity-70"><Southampton className="w-full h-full" /></div>
+          <div className="absolute left-14 top-10 w-[600px]">
+            <Wordmark className="text-[58px]" draw={false} place />
+            <p className="mt-6 font-display font-extrabold text-[60px] leading-[0.92]">Prawdziwy smak <span className="text-red">domu.</span></p>
+            <p className="mt-4 text-[26px] text-ink/70">Polish groceries in Southampton. Shop online or by the case.</p>
+          </div>
+          <img src={img('fb/deli-kabanosy.jpg')} alt="" className="absolute right-14 top-14 w-[440px] h-[360px] object-cover rounded-[36px] shadow-[0_30px_60px_-30px_rgba(0,0,0,.6)]" />
+          <div className="absolute right-[60px] top-[330px]"><Burst className="w-[150px] h-[150px] text-[30px] rotate-[8deg]">£13.99<br /><span className="text-[20px]">/kg</span></Burst></div>
+        </Frame>
+      );
+    case 'og-shop':
+      return (
+        <Frame w={w} h={h} className="bg-paper">
+          <div className="absolute left-14 top-14 w-[520px]">
+            <p className="text-[24px] font-bold uppercase tracking-[0.2em] text-red">Sklep · The shop</p>
+            <p className="mt-4 font-display font-extrabold text-[78px] leading-[0.9]">Wszystko z półek.</p>
+            <p className="mt-5 text-[28px] text-ink/70">Everything on the shelves, by the item or by the case.</p>
+            <div className="mt-10"><Wordmark className="text-[44px]" draw={false} /></div>
+          </div>
+          <div className="absolute right-12 top-12 grid grid-cols-3 gap-4 w-[560px]">
+            {['p/tymbark.jpg', 'p/lowicz-sos.jpg', 'p/ptasie-mleczko.jpg', 'p/zywiec.jpg', 'p/kasza.jpg', 'p/winiary.jpg'].map((src, i) => (
+              <div key={src} className="h-[255px] rounded-[30px] bg-white overflow-hidden p-4" style={{ transform: `rotate(${[-2, 2, -1, 1, -2, 2][i]}deg)` }}><img src={img(src)} alt="" className="w-full h-full object-contain" /></div>
+            ))}
+          </div>
+        </Frame>
+      );
+    case 'og-trade':
+      return (
+        <Frame w={w} h={h} className="bg-red text-cream">
+          <img src={img('fb/meat-shelf.jpg')} alt="" className="absolute inset-0 w-full h-full object-cover opacity-25" />
+          <div className="absolute left-14 top-16 w-[760px]">
+            <p className="text-[26px] font-bold uppercase tracking-[0.2em] text-gold">Dla firm · Trade & bulk</p>
+            <p className="mt-4 font-display font-extrabold text-[104px] leading-[0.88]">Hurt na kartony.</p>
+            <p className="mt-6 text-[30px] text-cream/90">Case prices, regular weekly orders and an account that remembers what you buy.</p>
+          </div>
+          <div className="absolute left-14 bottom-12"><Wordmark className="text-[46px]" light draw={false} /></div>
+          <div className="absolute right-16 bottom-16"><Burst className="w-[190px] h-[190px] text-[34px] rotate-[8deg]">Ceny<br />hurtowe</Burst></div>
+        </Frame>
+      );
+    case 'og-request':
+      return (
+        <Frame w={w} h={h} className="bg-gold">
+          <div className="absolute left-14 top-16 w-[640px]">
+            <p className="text-[26px] font-bold uppercase tracking-[0.2em]">Zamów produkt · Request a product</p>
+            <p className="mt-4 font-display font-extrabold text-[110px] leading-[0.86]">Nie ma?<br /><span className="text-red">Sprowadzimy.</span></p>
+            <p className="mt-6 text-[28px] text-ink/80">Tell us what you need. We’ll order it in.</p>
+          </div>
+          <div className="absolute right-14 top-20 grid gap-5">
+            {['p/kasza.jpg', 'p/ptasie-mleczko.jpg', 'p/winiary.jpg'].map((src, i) => (
+              <div key={src} className="w-[200px] h-[150px] rounded-[30px] bg-white overflow-hidden p-3" style={{ transform: `rotate(${[-5, 4, -2][i]}deg) translateX(${[0, -60, 0][i]}px)` }}><img src={img(src)} alt="" className="w-full h-full object-contain" /></div>
+            ))}
+          </div>
+          <div className="absolute left-14 bottom-12"><Wordmark className="text-[44px]" draw={false} /></div>
+        </Frame>
+      );
+    case 'og-account':
+      return (
+        <Frame w={w} h={h} className="bg-cream">
+          <div className="absolute left-14 top-16 w-[560px]">
+            <p className="text-[26px] font-bold uppercase tracking-[0.2em] text-red">Konto hurtowe · Trade account</p>
+            <p className="mt-4 font-display font-extrabold text-[66px] leading-[0.92]">Zamów ponownie jednym kliknięciem.</p>
+            <p className="mt-6 text-[28px] text-ink/70">Past orders, regular orders and your usual list.</p>
+          </div>
+          <div className="absolute right-14 top-16 w-[460px] rounded-[36px] bg-white p-7 shadow-[0_30px_60px_-30px_rgba(0,0,0,.45)]">
+            <p className="font-display font-extrabold text-[34px]">13 października</p>
+            <p className="text-[20px] text-ink/55">Delivery, Tuesday morning · £177.50</p>
+            {['p/kasza.jpg', 'p/winiary.jpg', 'p/zywiec.jpg'].map((src, i) => (
+              <div key={src} className="mt-4 flex items-center gap-4"><span className="w-16 h-16 rounded-2xl bg-paper grid place-items-center"><img src={img(src)} alt="" className="h-12 object-contain" /></span><span className="text-[24px] font-semibold">{[2, 1, 4][i]} × karton</span></div>
+            ))}
+            <div className="mt-6 rounded-full bg-red text-cream text-center font-bold text-[24px] py-4">Zamów ponownie</div>
+          </div>
+          <div className="absolute left-14 bottom-12"><Wordmark className="text-[44px]" draw={false} /></div>
+        </Frame>
+      );
+    case 'og-board':
+      return (
+        <Frame w={w} h={h} className="bg-paper">
+          <div className="absolute inset-x-0 top-24 text-center"><Wordmark className="text-[130px]" draw={false} place /></div>
+          <p className="absolute inset-x-0 top-[360px] text-center text-[30px] font-bold">Brand guidelines · Księga znaku</p>
+          <div className="absolute inset-x-0 bottom-16 flex justify-center gap-4">
+            {['#D7141A', '#FFF8EF', '#F6EEDF', '#1C1917', '#F4B400', '#2F6B35'].map((c) => <span key={c} className="w-[110px] h-[90px] rounded-[24px] ring-1 ring-ink/10" style={{ background: c }} />)}
+          </div>
         </Frame>
       );
     case 'story-offer':
@@ -150,7 +243,7 @@ export function Asset({ name }: { name: string }) {
             <p className="mt-6 text-[48px]">Vifon · 70 g</p>
           </div>
           <div className="absolute left-1/2 -translate-x-1/2 top-[900px]"><Burst className="w-[460px] h-[460px] text-[120px] rotate-[6deg]">2 za<br />£1.50</Burst></div>
-          <div className="absolute inset-x-0 bottom-[160px] text-center"><Wordmark className="text-[96px]" light place /></div>
+          <div className="absolute inset-x-0 bottom-[160px] text-center"><Wordmark className="text-[90px]" light place draw={false} /></div>
         </Frame>
       );
   }

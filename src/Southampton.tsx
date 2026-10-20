@@ -89,6 +89,7 @@ function Terrace() {
     { x: 1372, w: 84, h: 140 },
     { x: 1456, w: 92, h: 162 },
     { x: 1548, w: 70, h: 132 },
+    { x: 1618, w: 84, h: 154 },
   ];
   return (
     <g>
@@ -155,9 +156,18 @@ function Ferry() {
 
 /** Southampton waterfront, drawn as a pen-and-ink engraving: the Bargate, the old walls, the Civic Centre
  *  clock tower, a St Mary's terrace with the shop, dock cranes and ships on Southampton Water. */
-export function Southampton({ className = '' }: { className?: string }) {
+export function Southampton({ className = '', focusShopOnMobile = false }: { className?: string; focusShopOnMobile?: boolean }) {
   const ref = useRef<SVGSVGElement>(null);
   const [on, setOn] = useState(true);
+  const [narrow, setNarrow] = useState(false);
+  useEffect(() => {
+    if (!focusShopOnMobile) return;
+    const mq = window.matchMedia('(max-width: 700px)');
+    const f = () => setNarrow(mq.matches);
+    f();
+    mq.addEventListener('change', f);
+    return () => mq.removeEventListener('change', f);
+  }, [focusShopOnMobile]);
   useEffect(() => {
     const el = ref.current;
     if (!el || !('IntersectionObserver' in window)) return;
@@ -166,7 +176,7 @@ export function Southampton({ className = '' }: { className?: string }) {
     return () => io.disconnect();
   }, []);
   return (
-    <svg ref={ref} viewBox="0 0 1600 560" preserveAspectRatio="xMidYMax slice" fill="none" className={`${className} ${on ? '' : 'paused'}`} aria-hidden="true">
+    <svg ref={ref} viewBox={narrow ? '1004 0 640 560' : '0 0 1600 560'} preserveAspectRatio="xMidYMax slice" fill="none" className={`${className} ${on ? '' : 'paused'}`} aria-hidden="true">
       <defs>
         <pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
           <line x1="0" y1="0" x2="0" y2="5" stroke={INK} strokeWidth="1" />
@@ -196,10 +206,10 @@ export function Southampton({ className = '' }: { className?: string }) {
       <ClockTower />
       <Terrace />
 
-      <path d="M0 372 L1600 372" stroke={INK} strokeWidth="2.2" />
-      <path d="M0 380 L1600 380" stroke={INK} strokeWidth="1" />
-      {Array.from({ length: 20 }, (_, i) => <rect key={i} x={20 + i * 82} y="366" width="6" height="8" rx="2" fill={INK} />)}
-      <rect x="0" y="384" width="1600" height="176" fill="url(#water)" />
+      <path d="M0 372 L1700 372" stroke={INK} strokeWidth="2.2" />
+      <path d="M0 380 L1700 380" stroke={INK} strokeWidth="1" />
+      {Array.from({ length: 21 }, (_, i) => <rect key={i} x={20 + i * 82} y="366" width="6" height="8" rx="2" fill={INK} />)}
+      <rect x="0" y="384" width="1700" height="176" fill="url(#water)" />
 
       <g className="gulls">
         {[[520, 120], [560, 98], [980, 86], [1010, 110], [1250, 70]].map(([x, y], i) => (
