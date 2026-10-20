@@ -18,6 +18,8 @@ export const SIZES: Record<string, [number, number]> = {
   'post-online': [1080, 1350],
   'story-offer': [1080, 1920],
   'ig-banner': [3240, 1350],
+  'linkedin-company': [1128, 191],
+  'linkedin-personal': [1584, 396],
   'og-home': [1200, 630],
   'og-shop': [1200, 630],
   'og-trade': [1200, 630],
@@ -55,7 +57,7 @@ export function Asset({ name }: { name: string }) {
     case 'facebook-cover':
       return (
         <Frame w={w} h={h} className="bg-paper">
-          <div className="absolute inset-x-0 bottom-0 h-[57%]"><Southampton className="w-full h-full" /></div>
+          <div className="absolute inset-x-0 bottom-0 h-[57%]"><Southampton className="w-full h-full" view="0 60 1600 380" fit="xMidYMax slice" still /></div>
           <div className="absolute left-1/2 -translate-x-1/2 top-[30px] text-center w-[1100px]">
             <Wordmark className="text-[104px]" draw={false} />
             <p className="mt-1 text-[32px] font-bold text-ink">Polskie jedzenie w Southampton · <span className="text-red">Polish food in Southampton</span></p>
@@ -66,7 +68,7 @@ export function Asset({ name }: { name: string }) {
     case 'profile-picture':
       return (
         <Frame w={w} h={h} className="bg-cream grid place-items-center">
-          <Wordmark className="text-[112px]" draw={false} />
+          <Wordmark className="text-[101px]" draw={false} place />
         </Frame>
       );
     case 'post-smokehouse':
@@ -157,10 +159,34 @@ export function Asset({ name }: { name: string }) {
           <Foot />
         </Frame>
       );
+    case 'linkedin-company':
+      return (
+        <Frame w={w} h={h} className="bg-paper">
+          <div className="absolute right-0 bottom-0 h-full w-[430px]"><Southampton className="w-full h-full" view="900 40 760 420" fit="xMaxYMax slice" still /></div>
+          <div className="absolute right-[350px] bottom-0 h-full w-[110px] bg-gradient-to-r from-paper via-paper/80 to-transparent" />
+          <div className="absolute left-[200px] top-1/2 -translate-y-1/2">
+            <p className="font-display font-extrabold text-[29px] leading-none">Polskie jedzenie w Southampton</p>
+            <p className="mt-2.5 text-[16px] font-bold text-red">Polish groceries · Retail &amp; trade · 120 St Mary’s Road</p>
+          </div>
+        </Frame>
+      );
+    case 'linkedin-personal':
+      return (
+        <Frame w={w} h={h} className="bg-paper">
+          <div className="absolute inset-x-0 bottom-0 h-[62%]"><Southampton className="w-full h-full" view="0 40 1600 420" fit="xMidYMax slice" still /></div>
+          <div className="absolute right-[70px] top-[40px] flex items-center gap-8">
+            <div className="text-right">
+              <p className="font-display font-extrabold text-[44px] leading-none">Prawdziwy smak domu.</p>
+              <p className="mt-2 text-[22px] font-bold text-red">Polish groceries · 120 St Mary’s Road, Southampton</p>
+            </div>
+            <Wordmark className="text-[52px]" draw={false} />
+          </div>
+        </Frame>
+      );
     case 'ig-banner':
       return (
         <Frame w={w} h={h} className="bg-paper">
-          <div className="absolute inset-x-0 bottom-0 h-[52%]"><Southampton className="w-full h-full" /></div>
+          <div className="absolute inset-x-0 bottom-0 h-[52%]"><Southampton className="w-full h-full" view="0 60 1600 380" fit="xMidYMax slice" still /></div>
           <div className="absolute left-[80px] top-[130px] w-[900px]">
             <p className="text-[40px] font-bold uppercase tracking-[0.2em] text-red">Polskie jedzenie</p>
             <p className="mt-4 font-display font-extrabold text-[120px] leading-[0.9]">Prawdziwy smak domu.</p>
@@ -175,14 +201,13 @@ export function Asset({ name }: { name: string }) {
     case 'og-home':
       return (
         <Frame w={w} h={h} className="bg-cream">
-          <div className="absolute inset-x-0 bottom-0 h-[30%] opacity-70"><Southampton className="w-full h-full" /></div>
-          <div className="absolute left-14 top-10 w-[600px]">
-            <Wordmark className="text-[58px]" draw={false} place />
-            <p className="mt-6 font-display font-extrabold text-[60px] leading-[0.92]">Prawdziwy smak <span className="text-red">domu.</span></p>
-            <p className="mt-4 text-[26px] text-ink/70">Polish groceries in Southampton. Shop online or by the case.</p>
+          <div className="absolute inset-x-0 top-0 h-[14px] bg-red" />
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+            <p className="text-[34px] font-bold text-ink">Polski sklep spożywczy w Southampton</p>
+            <div className="mt-9"><Wordmark className="text-[118px]" draw={false} place /></div>
+            <p className="mt-12 text-[34px] font-bold text-red">Polish &amp; Eastern European groceries</p>
+            <p className="mt-3 text-[24px] text-ink/70">120 St Mary’s Road · Zamów online i odbierz w sklepie · Order online, collect in store</p>
           </div>
-          <img src={img('fb/deli-kabanosy.jpg')} alt="" className="absolute right-14 top-14 w-[440px] h-[360px] object-cover rounded-[36px] shadow-[0_30px_60px_-30px_rgba(0,0,0,.6)]" />
-          <div className="absolute right-[60px] top-[330px]"><Burst className="w-[150px] h-[150px] text-[30px] rotate-[8deg]">£13.99<br /><span className="text-[20px]">/kg</span></Burst></div>
         </Frame>
       );
     case 'og-shop':
@@ -278,8 +303,21 @@ export function Asset({ name }: { name: string }) {
   return null;
 }
 
+function LogoOnly() {
+  const q = new URLSearchParams(location.search);
+  document.documentElement.style.background = 'transparent';
+  document.body.style.background = 'transparent';
+  const cream = q.get('c') === 'cream';
+  return (
+    <div id="logo" className="inline-block p-[24px]" style={{ background: q.get('bg') ?? 'transparent' }}>
+      <Wordmark className="text-[260px]" light={cream} place={q.get('place') === '1'} draw={false} />
+    </div>
+  );
+}
+
 function Page() {
   const name = new URLSearchParams(location.search).get('a') ?? 'facebook-cover';
+  if (name === 'logo') return <LogoOnly />;
   return <StoreProvider><Asset name={name} /></StoreProvider>;
 }
 

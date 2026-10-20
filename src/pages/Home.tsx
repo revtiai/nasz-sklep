@@ -1,11 +1,11 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
 import { ArrowRight, Building2, CalendarClock, Clock, MapPin, PackageSearch, RefreshCw, ShoppingBasket, Truck } from 'lucide-react';
 import { CATEGORIES, OFFER_IDS, PRODUCTS, SHOP } from '../data.ts';
 import { gbp, product, useStore } from '../store.tsx';
 import { Burst, Eyebrow, ProductImage, Reveal, Stagger, btn, ease, img, useT } from '../ui.tsx';
 import { ProductCard } from './parts.tsx';
-import { ShopMap } from './ShopMap.tsx';
+const ShopMap = lazy(() => import('./ShopMap.tsx').then((m) => ({ default: m.ShopMap })));
 
 export default function Home() {
   return (
@@ -137,9 +137,9 @@ function Hero() {
                 </motion.div>
               </AnimatePresence>
             </div>
-            <div className="absolute right-4 bottom-4 flex gap-2" role="tablist" aria-label={t('Hero pictures', 'Zdjęcia')}>
+            <div className="absolute right-3 bottom-4 flex gap-0.5" role="tablist" aria-label={t('Hero pictures', 'Zdjęcia')}>
               {SCENES.map((_, k) => (
-                <button key={k} role="tab" aria-selected={k === i} aria-label={`${k + 1}`} onClick={() => setI(k)} className="h-3 rounded-full transition-all duration-500" style={{ width: k === i ? 34 : 12, background: k === i ? '#FFF8EF' : 'rgba(255,248,239,.55)' }} />
+                <button key={k} role="tab" aria-selected={k === i} aria-label={`${k + 1}`} onClick={() => setI(k)} className="h-11 px-1 -my-4 grid place-items-center"><span className="block h-3 rounded-full transition-all duration-500" style={{ width: k === i ? 34 : 12, background: k === i ? '#FFF8EF' : 'rgba(255,248,239,.55)' }} /></button>
               ))}
             </div>
           </motion.div>
@@ -232,7 +232,7 @@ function Offers() {
   const { scrollYProgress } = useScroll({ target: section, offset: ['start start', 'end end'] });
   const xRaw = useTransform(scrollYProgress, [0.04, 0.96], [0, -dist]);
   const x = useSpring(xRaw, { stiffness: 120, damping: 24, mass: 0.4 });
-  const bar = useTransform(scrollYProgress, [0.04, 0.96], ['0%', '100%']);
+  const bar = useTransform(scrollYProgress, [0.04, 0.96], [0, 1]);
   const items = OFFER_IDS.map((id) => product(id));
   if (reduce) {
     return (
@@ -252,11 +252,11 @@ function Offers() {
           </div>
           <p className="hidden md:block text-ink/55 font-semibold">{t('Keep scrolling', 'Przewijaj dalej')} →</p>
         </div>
-        <motion.ul ref={track} style={{ x }} initial="hidden" whileInView="show" viewport={{ once: true }} variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }} className="mt-6 flex gap-4 md:gap-5 px-4 md:px-[max(2rem,calc((100vw-80rem)/2+2rem))] w-max">
+        <motion.ul ref={track} style={{ x }} initial="hidden" whileInView="show" viewport={{ once: true }} variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }} className="mt-6 flex gap-4 md:gap-5 px-4 md:px-[max(2rem,calc((100vw-80rem)/2+2rem))] w-max will-change-transform [transform:translateZ(0)]">
           {items.map((p) => <ProductCard key={p.id} p={p} className="w-[62vw] sm:w-[38vw] md:w-[26vw] lg:w-[19vw] max-w-[270px] shrink-0" />)}
         </motion.ul>
         <div className="max-w-7xl w-full mx-auto px-4 md:px-8 mt-6">
-          <div className="h-1.5 rounded-full bg-ink/10 overflow-hidden"><motion.div className="h-full bg-red rounded-full" style={{ width: bar }} /></div>
+          <div className="h-1.5 rounded-full bg-ink/10 overflow-hidden"><motion.div className="h-full w-full bg-red rounded-full origin-left" style={{ scaleX: bar }} /></div>
           <p className="mt-3 text-sm text-ink/50">{t('Offers are from the shop’s past Facebook posts, as examples.', 'Promocje pochodzą z wcześniejszych postów sklepu, jako przykład.')}</p>
         </div>
       </div>
@@ -294,8 +294,8 @@ function Smokehouse() {
           <Reveal delay={0.1}><a href="#/shop/deli" className={`${btn.red} mt-8`}>{t('See the counter', 'Zobacz wędliny')} <ArrowRight className="w-5 h-5" /></a></Reveal>
         </div>
         <div className="relative h-[460px] md:h-[560px]">
-          <motion.img style={reduce ? undefined : { y: yA }} src={img('fb/deli-kielbasa.jpg')} alt={t('Kiełbasa wiejska and smoked bacon at £13.99 a kilo', 'Kiełbasa wiejska i boczek wędzony, 13.99 £/kg')} loading="lazy" className="absolute left-0 top-0 w-[70%] h-[62%] object-cover rounded-[1.8rem] shadow-[0_30px_60px_-34px_rgb(28_25_23/0.6)]" />
-          <motion.img style={reduce ? undefined : { y: yB }} src={img('fb/deli-rings.jpg')} alt={t('Smoked sausage rings in baskets', 'Kiełbasa w koszach')} loading="lazy" className="absolute right-0 bottom-0 w-[52%] h-[70%] object-cover rounded-[1.8rem] ring-8 ring-cream shadow-[0_30px_60px_-34px_rgb(28_25_23/0.6)]" />
+          <motion.img style={reduce ? undefined : { y: yA }} src={img('fb/deli-kielbasa.jpg')} alt={t('Kiełbasa wiejska and smoked bacon at £13.99 a kilo', 'Kiełbasa wiejska i boczek wędzony, 13.99 £/kg')} loading="lazy" decoding="async" className="absolute left-0 top-0 w-[70%] h-[62%] object-cover rounded-[1.8rem] shadow-[0_30px_60px_-34px_rgb(28_25_23/0.6)] will-change-transform" />
+          <motion.img style={reduce ? undefined : { y: yB }} src={img('fb/deli-rings.jpg')} alt={t('Smoked sausage rings in baskets', 'Kiełbasa w koszach')} loading="lazy" decoding="async" className="absolute right-0 bottom-0 w-[52%] h-[70%] object-cover rounded-[1.8rem] ring-8 ring-cream shadow-[0_30px_60px_-34px_rgb(28_25_23/0.6)] will-change-transform" />
           <motion.div style={reduce ? undefined : { rotate: rot }} className="absolute left-[8%] bottom-[6%]"><Burst className="w-28 h-28 text-[1.1rem]">£13.99<br /><span className="text-[0.7em]">/kg</span></Burst></motion.div>
         </div>
       </div>
@@ -336,7 +336,7 @@ function TradeSteps() {
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] });
   const [active, setActive] = useState(0);
   useMotionValueEvent(scrollYProgress, 'change', (v) => setActive(Math.min(steps.length - 1, Math.max(0, Math.floor(v * steps.length * 0.999)))));
-  const fill = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
+  const fill = useTransform(scrollYProgress, [0, 1], [0, 1]);
   if (reduce) {
     return (
       <section className="px-4 md:px-8 pt-20 max-w-7xl mx-auto">
@@ -345,7 +345,6 @@ function TradeSteps() {
       </section>
     );
   }
-  const S = steps[active];
   return (
     <section ref={ref} className="relative mt-16" style={{ height: `${steps.length * 85 + 40}vh` }}>
       <div className="sticky top-[72px] md:top-[84px] h-[calc(100vh-72px)] md:h-[calc(100vh-84px)] flex items-center">
@@ -355,7 +354,7 @@ function TradeSteps() {
             <h2 className="mt-2 text-[clamp(1.9rem,5vw,3.8rem)] font-extrabold leading-[0.95]">{t('Buying for a business? It’s simple.', 'Kupujesz dla firmy? To proste.')}</h2>
             <ol className="mt-6 md:mt-8 relative grid gap-1 md:gap-2">
               <span className="absolute left-[22px] top-3 bottom-3 w-1 rounded-full bg-ink/10" aria-hidden="true" />
-              <motion.span className="absolute left-[22px] top-3 w-1 rounded-full bg-red" style={{ height: fill }} aria-hidden="true" />
+              <motion.span className="absolute left-[22px] top-3 bottom-3 w-1 rounded-full bg-red origin-top" style={{ scaleY: fill }} aria-hidden="true" />
               {steps.map((s, k) => (
                 <li key={s.h} className="relative flex items-center gap-4 py-1.5 md:py-2.5">
                   <motion.span animate={{ scale: k === active ? 1.12 : 1, backgroundColor: k <= active ? '#D7141A' : '#FFFFFF', color: k <= active ? '#FFF8EF' : '#1C1917' }} transition={{ duration: 0.35 }} className="relative z-10 w-12 h-12 rounded-full grid place-items-center font-display font-extrabold text-lg shadow-[0_1px_0_rgb(28_25_23/0.1)]">{k + 1}</motion.span>
@@ -365,17 +364,17 @@ function TradeSteps() {
             </ol>
           </div>
           <div className="relative h-[34vh] md:h-[56vh] min-h-[240px]">
-            <AnimatePresence mode="popLayout">
-              <motion.div key={active} initial={{ opacity: 0, y: 60, scale: 0.94, rotate: 2 }} animate={{ opacity: 1, y: 0, scale: 1, rotate: 0 }} exit={{ opacity: 0, y: -60, scale: 0.94, rotate: -2 }} transition={{ duration: 0.6, ease }} className="absolute inset-0 rounded-[2rem] overflow-hidden shadow-[0_30px_70px_-34px_rgb(28_25_23/0.6)]">
-                <img src={img(S.img)} alt="" className="absolute inset-0 w-full h-full object-cover" />
+            {steps.map((st, k) => (
+              <motion.div key={st.h} initial={false} animate={{ opacity: k === active ? 1 : 0, y: k === active ? 0 : k < active ? -40 : 40, scale: k === active ? 1 : 0.96 }} transition={{ duration: 0.55, ease }} className="absolute inset-0 rounded-[2rem] overflow-hidden shadow-[0_30px_70px_-34px_rgb(28_25_23/0.6)] will-change-transform" style={{ pointerEvents: k === active ? 'auto' : 'none' }} aria-hidden={k !== active}>
+                <img src={img(st.img)} alt="" decoding="async" className="absolute inset-0 w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#5c0a0d]/90 via-[#8E0D11]/35 to-transparent" />
                 <div className="absolute left-0 right-0 bottom-0 p-6 md:p-9 text-cream">
-                  <motion.span initial={{ scale: 0, rotate: -90 }} animate={{ scale: 1, rotate: 0 }} transition={{ delay: 0.2, type: 'spring', stiffness: 220, damping: 14 }} className="w-14 h-14 rounded-2xl bg-cream text-red grid place-items-center"><S.icon className="w-7 h-7" aria-hidden="true" /></motion.span>
-                  <p className="mt-4 font-display font-extrabold text-2xl md:text-4xl leading-tight">{S.h}</p>
-                  <p className="mt-2 text-[1.05rem] md:text-lg text-cream/90 max-w-lg">{S.b}</p>
+                  <span className="w-14 h-14 rounded-2xl bg-cream text-red grid place-items-center"><st.icon className="w-7 h-7" aria-hidden="true" /></span>
+                  <p className="mt-4 font-display font-extrabold text-2xl md:text-4xl leading-tight">{st.h}</p>
+                  <p className="mt-2 text-[1.05rem] md:text-lg text-cream/90 max-w-lg">{st.b}</p>
                 </div>
               </motion.div>
-            </AnimatePresence>
+            ))}
           </div>
         </div>
       </div>
@@ -400,7 +399,7 @@ function Visit() {
             </div>
           </div>
         </Reveal>
-        <Reveal delay={0.1}><ShopMap /></Reveal>
+        <Reveal delay={0.1}><Suspense fallback={<div className="rounded-[2rem] bg-paper min-h-[380px] h-full" />}><ShopMap /></Suspense></Reveal>
       </div>
     </section>
   );

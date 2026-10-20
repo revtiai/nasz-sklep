@@ -110,14 +110,14 @@ function Header({ route }: { route: string }) {
     ['/request', t('Request a product', 'Zamów produkt')],
   ];
   return (
-    <header className={`sticky top-0 z-40 transition-[background-color,box-shadow] ${scrolled ? 'bg-cream/95 backdrop-blur shadow-[0_1px_0_rgb(28_25_23/0.12)]' : 'bg-cream'}`}>
+    <header className={`sticky top-0 z-40 transition-[background-color,box-shadow] ${scrolled ? 'bg-cream shadow-[0_1px_0_rgb(28_25_23/0.12)]' : 'bg-cream'}`}>
       <div className="max-w-7xl mx-auto px-4 md:px-8 h-[72px] md:h-[84px] flex items-center gap-4">
-        <a href="#/" className="flex items-center shrink-0 -ml-2" aria-label="Nasz Sklep, home">
+        <a href="#/" className="flex items-center min-h-12 shrink-0 -ml-2" aria-label="Nasz Sklep, home">
           <Wordmark className="text-[1.35rem] md:text-[1.6rem]" />
         </a>
-        <nav className="hidden lg:flex items-center gap-1 ml-6" aria-label="Main">
+        <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1 ml-2 xl:ml-6" aria-label="Main">
           {nav.map(([href, label]) => (
-            <a key={href} href={`#${href}`} className={`px-4 py-2.5 rounded-full font-semibold hover:bg-ink/5 ${route.startsWith(href) ? 'bg-ink/5 text-red' : ''}`}>{label}</a>
+            <a key={href} href={`#${href}`} className={`px-3 xl:px-4 py-2.5 rounded-full font-semibold whitespace-nowrap hover:bg-ink/5 ${route.startsWith(href) ? 'bg-ink/5 text-red' : ''}`}>{label}</a>
           ))}
         </nav>
         <div className="ml-auto flex items-center gap-2">
@@ -127,11 +127,11 @@ function Header({ route }: { route: string }) {
           <button onClick={() => setLang(lang === 'en' ? 'pl' : 'en')} className="press h-12 px-3.5 rounded-full border-2 border-ink/15 font-bold inline-flex items-center gap-1.5" aria-label={lang === 'en' ? 'Zmień język na polski' : 'Switch to English'}>
             <span className={lang === 'pl' ? 'text-red' : 'text-ink/40'}>PL</span><span className="text-ink/25">/</span><span className={lang === 'en' ? 'text-red' : 'text-ink/40'}>EN</span>
           </button>
-          <a href="#/account" className="press hidden lg:inline-flex h-12 items-center gap-2 rounded-full px-4 font-semibold border-2 border-ink/15">
-            <User className="w-5 h-5" aria-hidden="true" /> {account ? account.business.split(' (')[0] : t('Sign in', 'Zaloguj')}
+          <a href="#/account" className="press hidden lg:inline-flex h-12 min-w-12 items-center justify-center gap-2 rounded-full px-3 xl:px-4 font-semibold border-2 border-ink/15 whitespace-nowrap" aria-label={account ? account.business.split(' (')[0] : t('Sign in', 'Zaloguj')}>
+            <User className="w-5 h-5" aria-hidden="true" /> <span className="hidden xl:inline max-w-[12rem] truncate">{account ? account.business.split(' (')[0] : t('Sign in', 'Zaloguj')}</span>
           </a>
-          <button onClick={() => setBasketOpen(true)} className="press hidden lg:inline-flex h-12 items-center gap-2 rounded-full bg-red text-cream px-5 font-bold">
-            <ShoppingBasket className="w-5 h-5" aria-hidden="true" /> {t('Basket', 'Koszyk')}
+          <button onClick={() => setBasketOpen(true)} className="press hidden lg:inline-flex h-12 items-center gap-2 rounded-full bg-red text-cream px-4 xl:px-5 font-bold whitespace-nowrap" aria-label={`${t('Basket', 'Koszyk')}, ${count}`}>
+            <ShoppingBasket className="w-5 h-5" aria-hidden="true" /> <span className="hidden xl:inline">{t('Basket', 'Koszyk')}</span>
             <span key={bump} className={`min-w-7 h-7 px-1.5 grid place-items-center rounded-full bg-cream text-red text-sm font-extrabold ${bump ? 'pop' : ''}`}>{count}</span>
           </button>
         </div>

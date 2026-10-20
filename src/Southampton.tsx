@@ -156,7 +156,7 @@ function Ferry() {
 
 /** Southampton waterfront, drawn as a pen-and-ink engraving: the Bargate, the old walls, the Civic Centre
  *  clock tower, a St Mary's terrace with the shop, dock cranes and ships on Southampton Water. */
-export function Southampton({ className = '', focusShopOnMobile = false }: { className?: string; focusShopOnMobile?: boolean }) {
+export function Southampton({ className = '', focusShopOnMobile = false, view, fit = 'xMidYMax slice', still = false }: { className?: string; focusShopOnMobile?: boolean; view?: string; fit?: string; still?: boolean }) {
   const ref = useRef<SVGSVGElement>(null);
   const [on, setOn] = useState(true);
   const [narrow, setNarrow] = useState(false);
@@ -176,7 +176,7 @@ export function Southampton({ className = '', focusShopOnMobile = false }: { cla
     return () => io.disconnect();
   }, []);
   return (
-    <svg ref={ref} viewBox={narrow ? '1004 0 640 560' : '0 0 1600 560'} preserveAspectRatio="xMidYMax slice" fill="none" className={`${className} ${on ? '' : 'paused'}`} aria-hidden="true">
+    <svg ref={ref} viewBox={view ?? (narrow ? '1004 0 640 560' : '0 0 1600 560')} preserveAspectRatio={fit} fill="none" className={`${className} ${on && !still ? '' : 'paused'}`} aria-hidden="true">
       <defs>
         <pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
           <line x1="0" y1="0" x2="0" y2="5" stroke={INK} strokeWidth="1" />
@@ -217,7 +217,7 @@ export function Southampton({ className = '', focusShopOnMobile = false }: { cla
         ))}
       </g>
 
-      <g className="sail-ferry"><g transform="translate(0 488)"><Ferry /></g></g>
+      {!still && <g className="sail-ferry"><g transform="translate(0 488)"><Ferry /></g></g>}
       <g className="sail-ship"><g transform="translate(0 432)"><CruiseShip /></g></g>
     </svg>
   );

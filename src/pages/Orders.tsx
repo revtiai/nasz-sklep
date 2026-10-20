@@ -95,7 +95,7 @@ function OrderCard({ o }: { o: ShopOrder }) {
       {o.trade && <p className="mt-2 inline-block rounded-full bg-ink text-cream text-xs font-bold px-2.5 py-1">{t('Trade', 'Hurt')}{o.business ? ` · ${o.business.split(' (')[0]}` : ''}</p>}
       <p className="mt-3 font-semibold">{o.when}</p>
       <p className="text-[0.95rem] text-ink/70 flex items-center gap-1.5">{o.forSomeoneElse && <Users className="w-4 h-4" />}{o.collector}</p>
-      <a href={`tel:${o.phone.replace(/\s/g, '')}`} className="text-[0.95rem] text-red font-semibold inline-flex items-center gap-1"><Phone className="w-4 h-4" />{o.phone}</a>
+      <a href={`tel:${o.phone.replace(/\s/g, '')}`} className="text-[0.95rem] text-red font-semibold inline-flex items-center gap-1 min-h-11"><Phone className="w-4 h-4" />{o.phone}</a>
       <ul className="mt-3 grid gap-1.5 border-t border-ink/10 pt-3">
         {o.lines.map((l) => { const p = product(l.id); return (
           <li key={`${l.id}${l.trade}`} className="flex items-center gap-2 text-[0.95rem]">

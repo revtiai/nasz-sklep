@@ -11,7 +11,8 @@ export function ProductCard({ p, className = '' }: { p: Product; className?: str
   const name = lang === 'pl' ? p.pl : p.en;
   const sub = lang === 'pl' ? p.en : p.pl;
   return (
-    <motion.li variants={staggerItem} className={`group ${className} rounded-[1.6rem] bg-white overflow-hidden flex flex-col shadow-[0_1px_0_rgb(28_25_23/0.08),0_14px_30px_-24px_rgb(28_25_23/0.4)] hover:-translate-y-1 transition-transform duration-300`}>
+    <motion.li variants={staggerItem} className={`${className} flex`}>
+      <div className="group w-full rounded-[1.6rem] bg-white overflow-hidden flex flex-col shadow-[0_1px_0_rgb(28_25_23/0.08),0_14px_30px_-24px_rgb(28_25_23/0.4)] hover:-translate-y-1 transition-transform duration-300">
       <a href={`#/product/${p.id}`} className="relative block" aria-label={name}>
         <ProductImage p={p} className="aspect-square" />
         {p.offer && !trade && (
@@ -20,7 +21,7 @@ export function ProductCard({ p, className = '' }: { p: Product; className?: str
       </a>
       <div className="p-4 flex flex-col flex-1">
         {p.brand && <p className="text-[0.75rem] font-bold uppercase tracking-[0.14em] text-ink/50">{p.brand}</p>}
-        <a href={`#/product/${p.id}`} className="font-display font-extrabold text-[1.2rem] md:text-[1.3rem] leading-[1.1] mt-0.5 hover:text-red">{name}</a>
+        <a href={`#/product/${p.id}`} className="font-display font-extrabold text-[1.2rem] md:text-[1.3rem] leading-[1.1] mt-0.5 py-1 -my-1 hover:text-red">{name}</a>
         <p className="text-[0.9rem] text-ink/60 leading-snug mt-1">{sub}</p>
         <p className="text-[0.85rem] text-ink/55 mt-1">{trade ? t(`Case of ${p.caseQty}`, `Karton ${p.caseQty} szt.`) : p.size}</p>
         <div className="mt-auto pt-4 flex items-end justify-between gap-2 flex-wrap">
@@ -36,6 +37,7 @@ export function ProductCard({ p, className = '' }: { p: Product; className?: str
             <Stepper qty={qty} label={name} dec={() => add(p, -1)} inc={() => add(p)} />
           )}
         </div>
+      </div>
       </div>
     </motion.li>
   );

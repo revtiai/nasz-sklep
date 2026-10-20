@@ -39,7 +39,7 @@ export default function Shop({ initial }: { initial?: string }) {
         {trade && !account && (
           <p className="mt-4 rounded-2xl bg-ink text-cream px-5 py-4">{t('You are seeing trade prices. To order by the case you need a trade account.', 'Widzisz ceny hurtowe. Aby zamawiać na kartony, potrzebne jest konto hurtowe.')} <a href="#/trade" className="underline font-bold">{t('Apply or sign in', 'Załóż lub zaloguj się')}</a></p>
         )}
-        <div className="sticky top-[72px] md:top-[84px] z-20 -mx-4 px-4 md:mx-0 md:px-0 py-3 bg-cream/95 backdrop-blur mt-4">
+        <div className="sticky top-[72px] md:top-[84px] z-20 -mx-4 px-4 md:mx-0 md:px-0 py-3 bg-cream mt-4">
           <label className="relative block">
             <span className="sr-only">{t('Search', 'Szukaj')}</span>
             <Search className="w-6 h-6 absolute left-5 top-1/2 -translate-y-1/2 text-ink/45" aria-hidden="true" />

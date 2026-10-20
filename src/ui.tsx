@@ -23,7 +23,7 @@ function framePath(w: number, h: number, sw: number, gap: number) {
   return `M${cx - g} ${B} L${L + r} ${B} A${r} ${r} 0 0 1 ${L} ${B - r} L${L} ${T + r} A${r} ${r} 0 0 1 ${L + r} ${T} L${R - r} ${T} A${r} ${r} 0 0 1 ${R} ${T + r} L${R} ${B - r} A${r} ${r} 0 0 1 ${R - r} ${B} L${cx + g} ${B}`;
 }
 
-export function Frame({ draw = true, colour = '#D7141A', gap = 0, delay = 0.15 }: { draw?: boolean; colour?: string; gap?: number; delay?: number }) {
+export function Frame({ draw = true, colour = '#D7141A', gapPx = 0, delay = 0.15 }: { draw?: boolean; colour?: string; gapPx?: number; delay?: number }) {
   const reduce = useReducedMotion();
   const ref = useRef<SVGSVGElement>(null);
   const [box, setBox] = useState<[number, number, number] | null>(null);
@@ -44,7 +44,7 @@ export function Frame({ draw = true, colour = '#D7141A', gap = 0, delay = 0.15 }
     <svg ref={ref} className="absolute inset-0 w-full h-full overflow-visible pointer-events-none" aria-hidden="true">
       {box && (
         <motion.path
-          d={framePath(box[0], box[1], box[2], gap ? gap * (box[2] / 0.075) : 0)}
+          d={framePath(box[0], box[1], box[2], gapPx)}
           fill="none"
           stroke={colour}
           strokeWidth={box[2]}
@@ -59,17 +59,30 @@ export function Frame({ draw = true, colour = '#D7141A', gap = 0, delay = 0.15 }
   );
 }
 
-/** The shop's name exactly as on the sign: red, inside the rounded red frame. This is the logo. */
+/** The shop's name exactly as on the sign: red, inside the rounded red frame. This is the logo.
+ *  With `place`, SOUTHAMPTON sits in a gap in the bottom line; the gap is measured from the label itself. */
 export function Wordmark({ className = '', light = false, place = false, ring = true, draw = true }: { className?: string; light?: boolean; place?: boolean; ring?: boolean; draw?: boolean }) {
   const colour = light ? '#FFF8EF' : '#D7141A';
+  const label = useRef<HTMLSpanElement>(null);
+  const [gap, setGap] = useState(0);
+  useLayoutEffect(() => {
+    if (!place || !label.current) return;
+    const el = label.current;
+    const measure = () => setGap(el.offsetWidth);
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    document.fonts?.ready.then(measure);
+    return () => ro.disconnect();
+  }, [place]);
   return (
-    <span className={`relative inline-flex flex-col items-center leading-none ${ring ? 'px-[0.5em] pt-[0.2em] pb-[0.26em]' : ''} ${className}`}>
-      {ring && <Frame draw={draw} colour={colour} gap={place ? 2.55 : 0} />}
+    <span className={`relative inline-flex flex-col items-center leading-none ${ring ? `px-[0.5em] pt-[0.2em] ${place ? 'pb-[0.3em]' : 'pb-[0.26em]'}` : ''} ${className}`}>
+      {ring && (!place || gap > 0) && <Frame draw={draw} colour={colour} gapPx={gap} />}
       <span className={`relative whitespace-nowrap font-display font-extrabold tracking-[-0.02em] ${light ? 'text-cream' : 'text-red'}`}>
         Nasz Sklep
       </span>
       {place && (
-        <span className={`absolute left-1/2 -translate-x-1/2 bottom-0 translate-y-1/2 px-[0.5em] text-[0.22em] font-bold tracking-[0.24em] uppercase whitespace-nowrap ${light ? 'text-cream' : 'text-red'}`}>
+        <span ref={label} className={`absolute left-1/2 -translate-x-1/2 bottom-0 translate-y-1/2 pl-[0.9em] pr-[0.66em] text-[0.2em] leading-none font-bold tracking-[0.24em] uppercase whitespace-nowrap ${light ? 'text-cream' : 'text-red'}`}>
           Southampton
         </span>
       )}
