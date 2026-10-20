@@ -3,26 +3,36 @@ import { createRoot } from 'react-dom/client';
 import '@fontsource-variable/bricolage-grotesque';
 import '@fontsource-variable/inter';
 import './index.css';
-import { FolkFlower, Logo, ProductArt, Wycinanka, type ArtKind } from './art.tsx';
+import { BASE, Burst, Mark, Wordmark, img } from './ui.tsx';
+import { StoreProvider } from './store.tsx';
+import { Southampton } from './Southampton.tsx';
+import { Asset, SIZES } from './social.tsx';
 
-const base = import.meta.env.BASE_URL;
 const COLOURS = [
-  ['Czerwień', 'Shop red', '#D6232A', 'Logo, buttons, the trade band', 'text-cream'],
-  ['Krem', 'Cream', '#FFF8EE', 'Page background', 'text-ink'],
-  ['Atrament', 'Ink', '#1F1A17', 'Text, outlines, trade mode', 'text-cream'],
-  ['Musztarda', 'Mustard', '#F2B33D', 'Highlights, best sellers', 'text-ink'],
-  ['Liść', 'Leaf', '#2E7D4F', 'New in, ticks', 'text-cream'],
-  ['Błękit', 'Folk blue', '#2C5AA0', 'Chilled and frozen', 'text-cream'],
+  ['Czerwień', 'Shop red', '#D7141A', 'The sign, buttons, offers', 'text-cream'],
+  ['Krem', 'Cream', '#FFF8EF', 'Backgrounds', 'text-ink'],
+  ['Papier', 'Paper', '#F6EEDF', 'Panels and the footer', 'text-ink'],
+  ['Atrament', 'Ink', '#1C1917', 'Text and trade', 'text-cream'],
+  ['Złoto', 'Gold', '#F4B400', 'Highlights, requests', 'text-ink'],
+  ['Zieleń', 'Leaf', '#2F6B35', 'Fresh, confirmations', 'text-cream'],
 ] as const;
-const ART: ArtKind[] = ['sausage', 'kabanos', 'ham', 'cheese', 'milk', 'bread', 'dumplings', 'pickles', 'jar', 'soup', 'sweets', 'gingerbread', 'bottle', 'sack', 'cake', 'fish'];
-const BG = ['#F6C9C4', '#DCE6F5', '#F7E1B8', '#E3EEF2', '#DDEEDB', '#FBE3C9', '#F1DCCB', '#F2E8D2'];
 
 function Card({ title, children, className = '' }: { title: string; children: ReactNode; className?: string }) {
   return (
-    <section className={`rounded-[2rem] border-2 border-ink bg-white p-6 md:p-8 ${className}`}>
-      <p className="font-display font-bold text-red text-xs uppercase tracking-[0.2em] mb-4">{title}</p>
+    <section className={`rounded-[2rem] bg-white p-6 md:p-9 ${className}`}>
+      <p className="font-bold text-red text-xs uppercase tracking-[0.22em] mb-5">{title}</p>
       {children}
     </section>
+  );
+}
+
+function Scaled({ name, width }: { name: string; width: number }) {
+  const [w, h] = SIZES[name];
+  const z = width / w;
+  return (
+    <div className="rounded-2xl overflow-hidden shadow-[0_20px_40px_-30px_rgba(0,0,0,.6)]" style={{ width, height: h * z }}>
+      <div style={{ zoom: z }}><Asset name={name} /></div>
+    </div>
   );
 }
 
@@ -30,39 +40,36 @@ function Board() {
   return (
     <div className="min-h-screen bg-paper p-4 md:p-10">
       <div className="max-w-[1400px] mx-auto grid gap-5">
-        <header className="relative overflow-hidden rounded-[2rem] border-2 border-ink bg-red text-cream p-8 md:p-14">
-          <Wycinanka className="absolute -right-20 -top-20 w-[26rem] h-[26rem] opacity-90" colour="#A8141B" accent="#F2B33D" leaf="#2E7D4F" />
-          <div className="relative">
-            <p className="font-display font-bold text-mustard text-sm uppercase tracking-[0.2em]">Brand board · draft for review</p>
-            <div className="mt-6 text-[clamp(2.4rem,7vw,5.5rem)]"><Logo invert /></div>
-            <p className="mt-6 text-2xl md:text-4xl font-display font-extrabold max-w-3xl leading-tight">A taste of home, by the jar or by the case.</p>
-            <p className="mt-3 text-cream/80 max-w-2xl">Polish and Eastern European groceries, St Mary’s Road, Southampton. Retail and trade.</p>
+        <header className="relative overflow-hidden rounded-[2rem] bg-red text-cream p-8 md:p-14 min-h-[360px]">
+          <div className="relative z-10">
+            <p className="font-bold text-gold text-sm uppercase tracking-[0.22em]">Brand board · draft for review</p>
+            <div className="mt-6 text-[clamp(3rem,9vw,7rem)]"><Wordmark light /></div>
+            <p className="mt-4 text-2xl md:text-4xl font-display font-extrabold max-w-3xl leading-tight">Prawdziwy smak domu. A real taste of home.</p>
+            <p className="mt-3 text-cream/85 max-w-2xl text-lg">Polish and Eastern European groceries, 120 St Mary’s Road, Southampton. For homes, shops and kitchens.</p>
           </div>
+          <div className="absolute right-8 bottom-8 hidden md:block"><Mark size={150} inverse /></div>
         </header>
 
-        <div className="grid md:grid-cols-3 gap-5">
-          <Card title="Logo" className="md:col-span-2">
-            <div className="grid sm:grid-cols-3 gap-4">
-              <div className="rounded-2xl bg-cream border-2 border-ink grid place-items-center p-8 text-3xl"><Logo /></div>
-              <div className="rounded-2xl bg-red border-2 border-ink grid place-items-center p-8 text-3xl"><Logo invert /></div>
-              <div className="rounded-2xl bg-ink border-2 border-ink grid place-items-center p-8"><span className="w-24 h-24 rounded-[1.6rem] bg-red grid place-items-center"><FolkFlower className="w-16 h-16" colour="#FFF8EE" /></span></div>
-            </div>
-            <p className="mt-4 text-ink/70 text-[15px]">The shop sign, kept and tidied: the same red plaque and name, with a folk flower added. The flower on its own is the app icon and favicon.</p>
+        <div className="grid md:grid-cols-2 gap-5">
+          <Card title="1 · The name on the sign stays">
+            <div className="rounded-2xl bg-cream p-10 grid place-items-center"><Wordmark className="text-[5rem]" place /></div>
+            <p className="mt-5 text-ink/75 text-[1.05rem]">No change to the shop sign, the till or the bags. The wordmark is the same red name, set cleanly so it reads well on screens and print.</p>
           </Card>
-          <Card title="Pattern">
-            <div className="grid grid-cols-2 gap-3">
-              <Wycinanka className="w-full" />
-              <Wycinanka className="w-full" colour="#1F1A17" accent="#D6232A" leaf="#F2B33D" />
+          <Card title="2 · New: the NS mark, digital only">
+            <div className="grid grid-cols-3 gap-4 items-center">
+              <div className="rounded-2xl bg-cream grid place-items-center p-6"><Mark size={110} /></div>
+              <div className="rounded-2xl bg-red grid place-items-center p-6"><Mark size={110} inverse /></div>
+              <div className="rounded-2xl bg-ink grid place-items-center p-6"><span className="rounded-full overflow-hidden w-[110px] h-[110px] bg-red grid place-items-center"><Mark size={92} /></span></div>
             </div>
-            <p className="mt-4 text-ink/70 text-[15px]">Wycinanki, Polish paper-cut art. A warm nod to home that also feels fresh.</p>
+            <p className="mt-5 text-ink/75 text-[1.05rem]">The initials inside the outline of the shop’s own red sign. Used only where the full name is too long: the browser tab, the Facebook and Instagram picture, the phone icon. Nothing to repaint or reprint.</p>
           </Card>
         </div>
 
-        <Card title="Colour">
+        <Card title="3 · Colour">
           <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
             {COLOURS.map(([pl, en, hex, use, txt]) => (
-              <div key={hex} className={`rounded-2xl border-2 border-ink p-4 min-h-40 flex flex-col ${txt}`} style={{ background: hex }}>
-                <p className="font-display font-extrabold text-xl">{pl}</p>
+              <div key={hex} className={`rounded-2xl p-4 min-h-44 flex flex-col ${txt} ${hex === '#FFF8EF' ? 'ring-1 ring-ink/10' : ''}`} style={{ background: hex }}>
+                <p className="font-display font-extrabold text-2xl">{pl}</p>
                 <p className="text-sm opacity-80">{en}</p>
                 <p className="mt-auto font-mono text-sm">{hex}</p>
                 <p className="text-xs opacity-75">{use}</p>
@@ -71,66 +78,55 @@ function Board() {
           </div>
         </Card>
 
-        <div className="grid md:grid-cols-2 gap-5">
-          <Card title="Type">
+        <div className="grid md:grid-cols-[1.3fr_1fr] gap-5">
+          <Card title="4 · Type">
             <p className="font-display font-extrabold text-6xl leading-none">Bricolage Grotesque</p>
-            <p className="font-display font-extrabold text-4xl mt-3">Pierogi ruskie · Śledzie · Żurek</p>
-            <p className="mt-6 text-2xl">Inter for everything else: prices, labels, forms.</p>
-            <p className="mt-2 text-ink/70">Both are free, read clearly at any size and carry every Polish letter: ą ć ę ł ń ó ś ź ż.</p>
+            <p className="font-display font-extrabold text-4xl mt-3">Kiełbasa · Żurek · Śledzie · Pączki</p>
+            <p className="mt-6 text-2xl">Inter for prices, buttons and forms.</p>
+            <p className="mt-2 text-ink/70 text-lg">Both free. Large and clear for every customer, with every Polish letter: ą ć ę ł ń ó ś ź ż.</p>
           </Card>
-          <Card title="Buttons and labels">
-            <div className="flex flex-wrap gap-3 items-center">
-              <span className="rounded-full bg-red text-cream font-bold text-lg px-7 py-4 sticker-lg">Shop the range</span>
-              <span className="rounded-full bg-white font-bold text-lg px-7 py-4 sticker-lg">Open a trade account</span>
-              <span className="rounded-full bg-ink text-cream font-bold px-5 py-3">Add case</span>
+          <Card title="5 · The price burst">
+            <div className="flex items-center gap-6">
+              <Burst className="w-36 h-36 text-2xl rotate-6">2 za<br />£3</Burst>
+              <Burst className="w-28 h-28 text-lg -rotate-6">£13.99<br />/kg</Burst>
             </div>
-            <div className="flex flex-wrap gap-2 mt-6">
-              <span className="rounded-full px-3 py-1 text-sm font-bold border-2 border-ink bg-mustard">Best seller</span>
-              <span className="rounded-full px-3 py-1 text-sm font-bold border-2 border-ink bg-leaf text-cream">New in</span>
-              <span className="rounded-full px-3 py-1 text-sm font-bold border-2 border-ink bg-sky text-cream">Chilled</span>
-              <span className="rounded-full px-3 py-1 text-sm font-bold border-2 border-ink bg-ink text-cream">Trade</span>
-            </div>
-            <p className="mt-6 text-ink/70 text-[15px]">Big, round, high-contrast buttons with a thick outline, easy to see and tap for every customer.</p>
+            <p className="mt-5 text-ink/75 text-[1.05rem]">Taken from the shop’s own offer posters and tidied up. It marks every deal, online and on Facebook.</p>
           </Card>
         </div>
 
-        <Card title="Illustration set">
-          <div className="grid grid-cols-4 md:grid-cols-8 gap-3">
-            {ART.map((a, i) => <div key={a}><ProductArt kind={a} bg={BG[i % BG.length]} /></div>)}
+        <Card title="6 · Photography: the real shop">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {['fb/deli-kabanosy.jpg', 'fb/deli-kielbasa.jpg', 'fb/meat-cuts.jpg', 'fb/veg-cabbage.jpg'].map((s) => <img key={s} src={img(s)} alt="" className="rounded-2xl aspect-square object-cover w-full" />)}
           </div>
-          <p className="mt-4 text-ink/70 text-[15px]">Sticker-style drawings for the aisles and placeholders. Real product photos, taken on a phone in the shop, replace them product by product.</p>
+          <p className="mt-5 text-ink/75 text-[1.05rem]">Honest phone photos of the counter and shelves, straight from the shop’s Facebook page. Branded products use clean pack shots.</p>
         </Card>
 
-        <Card title="The storefront">
+        <Card title="7 · Southampton, drawn by hand">
+          <div className="rounded-2xl bg-paper overflow-hidden h-[340px]"><Southampton className="w-full h-full" /></div>
+          <p className="mt-5 text-ink/75 text-[1.05rem]">An engraved-style drawing of the city: the Bargate, the old walls, the Civic Centre clock tower, the docks and a cruise ship sailing past, with Nasz Sklep on the terrace. On the website the ships sail across the footer.</p>
+        </Card>
+
+        <Card title="8 · Facebook and Instagram">
+          <Scaled name="facebook-cover" width={1300} />
+          <div className="mt-5 grid grid-cols-2 md:grid-cols-4 gap-4">
+            {['post-smokehouse', 'post-offer', 'post-request', 'post-trade', 'post-online', 'post-christmas'].map((n) => <Scaled key={n} name={n} width={300} />)}
+            <div className="grid gap-4 content-start"><Scaled name="profile-picture" width={150} /><p className="text-sm text-ink/60">Profile picture for Facebook, Instagram and WhatsApp Business.</p></div>
+            <Scaled name="story-offer" width={180} />
+          </div>
+          <p className="mt-5 text-ink/75 text-[1.05rem]">Polish first, English underneath. One message per post, a big headline, the red burst for offers.</p>
+        </Card>
+
+        <Card title="9 · The online shop">
           <div className="grid md:grid-cols-[2fr_1fr_1fr] gap-4 items-start">
-            <img src={`${base}board/d-0.png`} alt="Desktop home page" className="rounded-2xl border-2 border-ink w-full" />
-            <img src={`${base}board/m-1.png`} alt="Phone shop page" className="rounded-2xl border-2 border-ink w-full" />
-            <img src={`${base}board/m-5.png`} alt="Phone basket with a trade case" className="rounded-2xl border-2 border-ink w-full" />
+            <img src={`${BASE}board/d-home.png`} alt="Website home page on a computer" className="rounded-2xl w-full ring-1 ring-ink/10" />
+            <img src={`${BASE}board/m-home.png`} alt="Website on a phone" className="rounded-2xl w-full ring-1 ring-ink/10" />
+            <img src={`${BASE}board/m-account.png`} alt="Trade account on a phone" className="rounded-2xl w-full ring-1 ring-ink/10" />
           </div>
         </Card>
-
-        <div className="grid md:grid-cols-2 gap-5">
-          <Card title="How it sounds">
-            <ul className="grid gap-3 text-lg">
-              <li><b>Warm, like the counter.</b> “Come and say cześć.”</li>
-              <li><b>Plain English first,</b> Polish product names always shown.</li>
-              <li><b>Clear for trade.</b> Case sizes and per-item prices side by side.</li>
-              <li><b>No jargon.</b> Short sentences, big text.</li>
-            </ul>
-          </Card>
-          <Card title="Built on Shopify">
-            <ul className="grid gap-3 text-lg">
-              <li>Add a product from a phone photo in under a minute.</li>
-              <li>Retail price and trade case price on every product.</li>
-              <li>Card, Apple Pay and Google Pay checkout.</li>
-              <li>Click and collect from St Mary’s Road, delivery when wanted.</li>
-            </ul>
-          </Card>
-        </div>
-        <p className="text-center text-xs text-ink/55 py-4">Draft by Revti for Nasz Sklep (Southampton) Limited. Products, prices and wording are examples for review.</p>
+        <p className="text-center text-xs text-ink/55 py-4">Draft by Revti for Nasz Sklep (Southampton) Limited. Prices and products are examples for review.</p>
       </div>
     </div>
   );
 }
 
-createRoot(document.getElementById('root')!).render(<StrictMode><Board /></StrictMode>);
+createRoot(document.getElementById('root')!).render(<StrictMode><StoreProvider><Board /></StoreProvider></StrictMode>);

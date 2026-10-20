@@ -1,0 +1,97 @@
+import { useState, type FormEvent } from 'react';
+import { motion } from 'motion/react';
+import { Camera, CheckCircle2, Clock, PackageCheck, Search } from 'lucide-react';
+import { useStore } from '../store.tsx';
+import { btn, field, useT } from '../ui.tsx';
+import { PageHead } from './parts.tsx';
+
+export function RequestStatus({ status }: { status: 'received' | 'sourcing' | 'in-stock' }) {
+  const t = useT();
+  const steps = [
+    ['received', t('Received', 'Przyjęte'), Clock],
+    ['sourcing', t('Finding it', 'Szukamy'), Search],
+    ['in-stock', t('On the shelf', 'Na półce'), PackageCheck],
+  ] as const;
+  const at = steps.findIndex(([s]) => s === status);
+  return (
+    <ol className="flex gap-1.5" aria-label={t('Request progress', 'Postęp')}>
+      {steps.map(([s, label, Icon], i) => (
+        <li key={s} className={`flex-1 rounded-xl px-2 py-2 text-center text-[0.8rem] font-bold ${i <= at ? (i === at ? 'bg-red text-cream' : 'bg-red/15 text-red') : 'bg-ink/5 text-ink/45'}`}>
+          <Icon className="w-4 h-4 mx-auto mb-0.5" aria-hidden="true" />{label}
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+export default function RequestPage() {
+  const t = useT();
+  const { addRequest, requests, account, say } = useStore();
+  const [photo, setPhoto] = useState<string | undefined>();
+  const [done, setDone] = useState<string | null>(null);
+  const submit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const f = new FormData(e.currentTarget);
+    const r = addRequest({ product: String(f.get('product')), brand: String(f.get('brand') || ''), qty: String(f.get('qty') || ''), how: String(f.get('how')), photo });
+    setDone(r.id);
+    say(t('Request sent. We’ll let you know.', 'Prośba wysłana. Damy znać.'));
+    e.currentTarget.reset();
+    setPhoto(undefined);
+  };
+  return (
+    <>
+      <PageHead eyebrow={t('Request a product', 'Zamów produkt')} title={t('Can’t find it? We’ll order it in.', 'Nie ma? Sprowadzimy.')} body={t('For one jar or fifty cases. Tell us what you need and we’ll come back to you.', 'Jeden słoik czy pięćdziesiąt kartonów. Napisz, czego potrzebujesz, odezwiemy się.')} />
+      <div className="max-w-7xl mx-auto px-4 md:px-8 pb-20 grid lg:grid-cols-[1.2fr_1fr] gap-8 items-start">
+        <form onSubmit={submit} className="rounded-[2rem] bg-white p-6 md:p-8 grid gap-5">
+          <label className="grid gap-2 font-semibold text-[1.05rem]">{t('What product?', 'Jaki produkt?')}<input name="product" required placeholder={t('e.g. Ogórki kiszone in a barrel', 'np. ogórki kiszone z beczki')} className={field} /></label>
+          <label className="grid gap-2 font-semibold text-[1.05rem]">{t('Brand, if it matters', 'Marka (jeśli ważna)')}<input name="brand" className={field} /></label>
+          <div className="grid sm:grid-cols-2 gap-5">
+            <label className="grid gap-2 font-semibold text-[1.05rem]">{t('How many?', 'Ile?')}<input name="qty" placeholder={t('e.g. 2 cases', 'np. 2 kartony')} className={field} /></label>
+            <label className="grid gap-2 font-semibold text-[1.05rem]">{t('How often?', 'Jak często?')}
+              <select name="how" className={field} defaultValue="Once">
+                <option value="Once">{t('Just once', 'Jednorazowo')}</option>
+                <option value="Weekly">{t('Every week', 'Co tydzień')}</option>
+                <option value="Fortnightly">{t('Every two weeks', 'Co dwa tygodnie')}</option>
+                <option value="Monthly">{t('Every month', 'Co miesiąc')}</option>
+              </select>
+            </label>
+          </div>
+          <label className="grid gap-2 font-semibold text-[1.05rem]">
+            {t('Photo of the packet (optional)', 'Zdjęcie opakowania (opcjonalnie)')}
+            <span className="flex items-center gap-4 rounded-2xl border-2 border-dashed border-ink/25 p-4 cursor-pointer hover:border-red">
+              {photo ? <img src={photo} alt="" className="w-20 h-20 rounded-xl object-cover" /> : <span className="w-20 h-20 rounded-xl bg-paper grid place-items-center"><Camera className="w-8 h-8 text-ink/50" /></span>}
+              <span className="font-normal text-ink/70">{t('Take a photo or choose one', 'Zrób zdjęcie lub wybierz')}</span>
+              <input type="file" accept="image/*" capture="environment" className="sr-only" onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                const r = new FileReader();
+                r.onload = () => setPhoto(String(r.result));
+                r.readAsDataURL(file);
+              }} />
+            </span>
+          </label>
+          {!account && <label className="grid gap-2 font-semibold text-[1.05rem]">{t('Phone or email, so we can tell you', 'Telefon lub email, abyśmy dali znać')}<input name="contact" required className={field} /></label>}
+          <button className={btn.red}>{t('Send request', 'Wyślij prośbę')}</button>
+          {done && <motion.p initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2 text-leaf font-bold"><CheckCircle2 className="w-6 h-6" />{t(`Request ${done} received.`, `Prośba ${done} przyjęta.`)}</motion.p>}
+        </form>
+        <aside>
+          <h2 className="text-2xl font-extrabold">{t('Your requests', 'Twoje prośby')}</h2>
+          {requests.length === 0 ? (
+            <p className="mt-3 text-ink/65 text-lg">{t('Nothing yet. Requests you send appear here so you can follow them.', 'Na razie nic. Wysłane prośby pojawią się tutaj.')}</p>
+          ) : (
+            <ul className="mt-4 grid gap-3">
+              {requests.map((r) => (
+                <li key={r.id} className="rounded-[1.6rem] bg-white p-5">
+                  <div className="flex justify-between gap-3"><p className="font-display font-extrabold text-xl leading-tight">{r.product}</p><span className="text-sm text-ink/50 shrink-0">{r.id}</span></div>
+                  <p className="text-ink/65 mt-1">{[r.brand, r.qty, r.how].filter(Boolean).join(' · ')}</p>
+                  <div className="mt-3"><RequestStatus status={r.status} /></div>
+                  {r.note && <p className="mt-3 text-[0.95rem] text-leaf font-semibold">{r.note}</p>}
+                </li>
+              ))}
+            </ul>
+          )}
+        </aside>
+      </div>
+    </>
+  );
+}

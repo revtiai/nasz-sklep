@@ -3,38 +3,36 @@
 @theme {
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
   --font-display: 'Bricolage Grotesque Variable', 'Inter Variable', sans-serif;
-  --color-red: #d6232a;
-  --color-red-deep: #a8141b;
-  --color-cream: #fff8ee;
-  --color-paper: #fdf1e1;
-  --color-ink: #1f1a17;
-  --color-leaf: #2e7d4f;
-  --color-mustard: #f2b33d;
-  --color-sky: #2c5aa0;
-  --color-rose: #f6c9c4;
+  --color-red: #d7141a;
+  --color-red-deep: #8e0d11;
+  --color-cream: #fff8ef;
+  --color-paper: #f6eedf;
+  --color-ink: #1c1917;
+  --color-gold: #f4b400;
+  --color-leaf: #2f6b35;
+  --color-line: rgb(28 25 23 / 0.12);
 }
 
-html { -webkit-text-size-adjust: 100%; scroll-padding-top: 5rem; }
-body { background: var(--color-cream); color: var(--color-ink); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
-h1, h2, h3, .font-display { font-family: var(--font-display); font-variation-settings: 'wdth' 100; letter-spacing: -0.02em; }
-:focus-visible { outline: 3px solid var(--color-sky); outline-offset: 3px; border-radius: 6px; }
+html { font-size: 18px; -webkit-text-size-adjust: 100%; scroll-padding-top: 6rem; }
+body { background: var(--color-cream); color: var(--color-ink); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; line-height: 1.5; }
+h1, h2, h3, .font-display { font-family: var(--font-display); letter-spacing: -0.025em; }
+:focus-visible { outline: 3px solid var(--color-red); outline-offset: 3px; border-radius: 10px; }
 button, a { -webkit-tap-highlight-color: transparent; }
 .no-scrollbar { scrollbar-width: none; } .no-scrollbar::-webkit-scrollbar { display: none; }
+.press { transition: transform .15s ease, box-shadow .15s ease, background-color .2s, color .2s; }
+.press:active { transform: scale(.97); }
 
-@keyframes spin-slow { to { transform: rotate(360deg); } }
-@keyframes bob { 0%,100% { transform: translateY(0) rotate(var(--r,0deg)); } 50% { transform: translateY(-10px) rotate(var(--r,0deg)); } }
 @keyframes marquee { to { transform: translateX(-50%); } }
-@keyframes pop { 0% { transform: scale(1); } 40% { transform: scale(1.25); } 100% { transform: scale(1); } }
-@keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
-.spin-slow { animation: spin-slow 60s linear infinite; }
-.bob { animation: bob 5s ease-in-out infinite; }
-.marquee { animation: marquee 32s linear infinite; }
-.pop { animation: pop .35s ease-out; }
-.rise { animation: rise .7s cubic-bezier(.22,1,.36,1) both; }
-.press { transition: transform .15s ease, background-color .2s, color .2s, box-shadow .2s; }
-.press:active { transform: scale(.96); }
-.sticker { box-shadow: 0 2px 0 var(--color-ink), 0 0 0 2px var(--color-ink); }
-.sticker-lg { box-shadow: 0 5px 0 var(--color-ink), 0 0 0 2.5px var(--color-ink); }
+.marquee { animation: marquee 38s linear infinite; }
+@keyframes sail-ship { from { transform: translateX(-760px); } to { transform: translateX(1760px); } }
+@keyframes sail-ferry { from { transform: translateX(1720px); } to { transform: translateX(-420px); } }
+@keyframes gull { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+.sail-ship { animation: sail-ship 70s linear infinite; animation-delay: -18s; }
+.sail-ferry { animation: sail-ferry 44s linear infinite; animation-delay: -6s; }
+.gull { animation: gull 3.2s ease-in-out infinite; transform-box: fill-box; }
+.paused, .paused * { animation-play-state: paused !important; }
+@keyframes pop { 0% { transform: scale(1); } 45% { transform: scale(1.3); } 100% { transform: scale(1); } }
+.pop { animation: pop .4s ease-out; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }

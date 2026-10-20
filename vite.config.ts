@@ -7,5 +7,5 @@ const env = (globalThis as { process?: { env: Record<string, string | undefined>
 export default defineConfig({
   base: env.BASE_PATH ?? '/',
   plugins: [react(), tailwindcss()],
-  build: { rollupOptions: { input: { main: 'index.html', board: 'board.html' } } },
+  build: { rollupOptions: { input: { main: 'index.html', board: 'board.html', social: 'social.html' } } },
 });
