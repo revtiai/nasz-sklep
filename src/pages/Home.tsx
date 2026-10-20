@@ -22,6 +22,16 @@ export default function Home() {
   );
 }
 
+// The headline cycles through the reasons people come to the shop, so returning visitors see something new.
+const HEADLINES: { en: { text: string; red: number[] }; pl: { text: string; red: number[] } }[] = [
+  { en: { text: 'A real taste of home.', red: [4] }, pl: { text: 'Prawdziwy smak domu.', red: [2] } },
+  { en: { text: 'Order online, collect today.', red: [3] }, pl: { text: 'Zamów online, odbierz dziś.', red: [3] } },
+  { en: { text: 'Stocking a café? Buy by the case.', red: [4, 5, 6] }, pl: { text: 'Prowadzisz kawiarnię? Kupuj na kartony.', red: [3, 4] } },
+  { en: { text: 'Can’t find it? We’ll order it in.', red: [4, 5, 6] }, pl: { text: 'Nie ma? Sprowadzimy.', red: [2] } },
+  { en: { text: 'Warm kabanosy from the smokehouse.', red: [1] }, pl: { text: 'Ciepłe kabanosy, prosto z wędzarni.', red: [1] } },
+  { en: { text: 'Shopping for Mum? She can collect.', red: [3, 4, 5] }, pl: { text: 'Zakupy dla mamy? Odbierze ktoś inny.', red: [3, 4, 5] } },
+];
+
 const SCENES = [
   { img: 'fb/deli-kabanosy.jpg', pos: '50% 60%', en: ['Warm smoked meats', 'Straight from a traditional smokehouse'], pl: ['Ciepłe wędliny', 'Prosto z tradycyjnej wędzarni'], card: 'poledwica-sopocka', burst: ['£13.99', '/kg'] },
   { img: 'fb/veg-cabbage.jpg', pos: '50% 40%', en: ['Fresh fruit and veg', 'New deliveries every week'], pl: ['Świeże warzywa i owoce', 'Nowe dostawy co tydzień'], card: 'kapusta', burst: ['£1.49', 'each'] },
@@ -59,7 +69,15 @@ function Hero() {
   const y2 = useTransform(scrollYProgress, [0, 1], ['0%', '-30%']);
   const scene = SCENES[i];
   const card = product(scene.card);
-  const words = t('A real taste of home.', 'Prawdziwy smak domu.').split(' ');
+  const [h, setH] = useState(0);
+  useEffect(() => {
+    if (reduce) return;
+    const id = setInterval(() => setH((n) => (n + 1) % HEADLINES.length), 5200);
+    return () => clearInterval(id);
+  }, [reduce]);
+  const line = HEADLINES[h][lang];
+  const headline = line.text.split(' ');
+  const headlineRed = line.red;
   return (
     <section ref={ref} className="relative px-4 md:px-8 pt-6 md:pt-12 pb-16 md:pb-24">
       <div className="max-w-7xl mx-auto grid lg:grid-cols-[1.05fr_1fr] gap-10 lg:gap-12 items-center">
@@ -67,13 +85,24 @@ function Hero() {
           <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-[0.85rem] font-bold shadow-[0_1px_0_rgb(28_25_23/0.1)]">
             <MapPin className="w-4 h-4 text-red" aria-hidden="true" /> {SHOP.street}, {SHOP.town}
           </motion.p>
-          <h1 className="mt-5 text-[clamp(3rem,9.5vw,6.2rem)] font-extrabold leading-[0.9]">
-            {words.map((w, k) => (
-              <span key={`${lang}${k}`} className="inline-block overflow-hidden align-bottom mr-[0.22em]">
-                <motion.span className={`inline-block ${k === words.length - 1 ? 'text-red' : ''}`} initial={reduce ? false : { y: '110%' }} animate={{ y: 0 }} transition={{ delay: 0.2 + k * 0.08, duration: 0.8, ease }}>{w}</motion.span>
-              </span>
-            ))}
+          <h1 className="mt-5 text-[clamp(2.15rem,9.6vw,4rem)] max-[359px]:text-[1.8rem] lg:text-[4.3vw] xl:text-[3.6rem] font-extrabold leading-[0.92] min-h-[2.84em]">
+            <span className="sr-only">{t('Nasz Sklep: a real taste of home. Polish groceries in Southampton.', 'Nasz Sklep: prawdziwy smak domu. Polskie produkty w Southampton.')}</span>
+            <AnimatePresence mode="wait">
+              <motion.span key={`${lang}${h}`} aria-hidden="true" className="block" initial="hidden" animate="show" exit="out" variants={{ hidden: {}, show: { transition: { staggerChildren: 0.06, delayChildren: h === 0 ? 0.2 : 0 } }, out: { transition: { staggerChildren: 0.03 } } }}>
+                {headline.map((w, k) => (
+                  <span key={k} className="inline-block overflow-hidden align-bottom mr-[0.22em] pb-[0.06em]">
+                    <motion.span
+                      className={`inline-block ${headlineRed.includes(k) ? 'text-red' : ''}`}
+                      variants={{ hidden: reduce ? {} : { y: '110%' }, show: { y: 0, transition: { duration: 0.7, ease } }, out: reduce ? {} : { y: '-110%', transition: { duration: 0.35, ease: [0.4, 0, 1, 1] } } }}
+                    >{w}</motion.span>
+                  </span>
+                ))}
+              </motion.span>
+            </AnimatePresence>
           </h1>
+          <div className="mt-2 flex gap-1.5" aria-hidden="true">
+            {HEADLINES.map((_, k) => <span key={k} className="h-1.5 rounded-full transition-all duration-500" style={{ width: k === h ? 28 : 8, background: k === h ? '#D7141A' : 'rgba(28,25,23,.18)' }} />)}
+          </div>
           <motion.p initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55, duration: 0.7, ease }} className="mt-6 text-[1.2rem] md:text-[1.35rem] text-ink/75 max-w-xl leading-relaxed">
             {t('Polish and Eastern European groceries from St Mary’s Road. Order online and collect from the shop, paying online or at the counter. Buying for a business? Order by the case.', 'Polskie i wschodnioeuropejskie produkty z St Mary’s Road. Zamów online i odbierz w sklepie, płacąc online lub przy ladzie. Kupujesz dla firmy? Zamawiaj na kartony.')}
           </motion.p>

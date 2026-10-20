@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import '@fontsource-variable/bricolage-grotesque';
 import '@fontsource-variable/inter';
 import './index.css';
-import { Badge, Burst, Wordmark, img } from './ui.tsx';
+import { Burst, Wordmark, img } from './ui.tsx';
 import { StoreProvider } from './store.tsx';
 import { Southampton } from './Southampton.tsx';
 
@@ -17,6 +17,7 @@ export const SIZES: Record<string, [number, number]> = {
   'post-christmas': [1080, 1350],
   'post-online': [1080, 1350],
   'story-offer': [1080, 1920],
+  'ig-banner': [3240, 1350],
   'og-home': [1200, 630],
   'og-shop': [1200, 630],
   'og-trade': [1200, 630],
@@ -30,6 +31,16 @@ function Foot({ dark = false }: { dark?: boolean }) {
     <div className={`absolute inset-x-0 bottom-0 px-16 pb-14 flex items-center justify-between ${dark ? 'text-cream' : 'text-ink'}`}>
       <span className="flex items-center"><Wordmark className="text-[50px]" light={dark} draw={false} /></span>
       <span className="text-right text-[26px] font-semibold leading-tight opacity-85">120 St Mary’s Road<br />Southampton</span>
+    </div>
+  );
+}
+
+function Head({ eyebrow, title, sub, light = false, big = false }: { eyebrow: string; title: ReactNode; sub: string; light?: boolean; big?: boolean }) {
+  return (
+    <div className="absolute left-16 right-16 top-[84px]">
+      <p className={`text-[30px] font-bold uppercase tracking-[0.2em] ${light ? 'text-gold' : 'text-red'}`}>{eyebrow}</p>
+      <p className={`mt-4 font-display font-extrabold leading-[0.9] ${big ? 'text-[120px]' : 'text-[100px]'}`}>{title}</p>
+      <p className={`mt-5 text-[34px] ${light ? 'text-cream/85' : 'text-ink/70'}`}>{sub}</p>
     </div>
   );
 }
@@ -53,7 +64,11 @@ export function Asset({ name }: { name: string }) {
         </Frame>
       );
     case 'profile-picture':
-      return <Frame w={w} h={h} className="bg-cream grid place-items-center"><Badge size={720} /></Frame>;
+      return (
+        <Frame w={w} h={h} className="bg-cream grid place-items-center">
+          <Wordmark className="text-[112px]" draw={false} />
+        </Frame>
+      );
     case 'post-smokehouse':
       return (
         <Frame w={w} h={h} className="bg-ink text-cream">
@@ -70,48 +85,42 @@ export function Asset({ name }: { name: string }) {
       );
     case 'post-offer':
       return (
-        <Frame w={w} h={h} className="bg-cream">
-          <div className="absolute inset-x-0 top-0 h-[16px] bg-red" />
-          <p className="absolute left-16 top-20 text-[34px] font-bold uppercase tracking-[0.2em] text-red">Promocja tygodnia</p>
-          <p className="absolute left-16 top-[140px] font-display font-extrabold text-[118px] leading-[0.9] w-[760px]">Woda Żywiec Zdrój</p>
-          <p className="absolute left-16 top-[400px] text-[36px] text-ink/70">1.5 l, lekko gazowana · lightly sparkling</p>
-          <img src={img('p/zywiec.jpg')} alt="" className="absolute left-1/2 -translate-x-1/2 top-[470px] h-[560px] object-contain" />
-          <div className="absolute right-16 top-[560px]"><Burst className="w-[300px] h-[300px] text-[80px] rotate-[10deg]">6 za<br />£5</Burst></div>
+        <Frame w={w} h={h} className="bg-gradient-to-b from-[#fde9dc] to-cream">
+          <Head eyebrow="Promocja tygodnia · Offer of the week" title={<>Woda <span className="text-red">Żywiec Zdrój</span></>} sub="1.5 l, lekko gazowana · lightly sparkling" />
+          <div className="absolute left-1/2 -translate-x-1/2 top-[420px] w-[720px] h-[640px] rounded-[64px] bg-white shadow-[0_50px_90px_-50px_rgba(28,25,23,.55)] grid place-items-center">
+            <img src={img('p/zywiec.jpg')} alt="" className="h-[560px] object-contain" />
+          </div>
+          <div className="absolute right-[90px] top-[360px]"><Burst className="w-[300px] h-[300px] text-[84px] rotate-[10deg]">6 za<br />£5</Burst></div>
+          <p className="absolute inset-x-0 top-[1090px] text-center text-[34px] font-bold">Kup 6, zapłać £5 · Buy 6 for £5</p>
           <Foot />
         </Frame>
       );
     case 'post-request':
       return (
         <Frame w={w} h={h} className="bg-gold">
-          <div className="absolute left-16 right-16 top-24">
-            <p className="text-[34px] font-bold uppercase tracking-[0.2em]">Zamów produkt</p>
-            <p className="mt-4 font-display font-extrabold text-[150px] leading-[0.86]">Nie ma?<br /><span className="text-red">Sprowadzimy.</span></p>
-            <p className="mt-10 text-[44px] font-semibold leading-tight">Napisz, czego szukasz. Jeden słoik albo pięćdziesiąt kartonów.</p>
-            <p className="mt-6 text-[34px] text-ink/75">Can’t find it? Tell us and we’ll order it in.</p>
-          </div>
-          <div className="absolute right-16 top-[860px] flex gap-6">
-            {['p/kasza.jpg', 'p/ptasie-mleczko.jpg', 'p/winiary.jpg'].map((s, i) => (
-              <div key={s} className="w-[200px] h-[200px] rounded-[40px] bg-white grid place-items-center shadow-[0_20px_40px_-20px_rgba(0,0,0,.5)]" style={{ transform: `rotate(${[-6, 4, -2][i]}deg)` }}>
-                <img src={img(s)} alt="" className="w-[150px] h-[150px] object-contain" />
+          <Head eyebrow="Zamów produkt · Request a product" title={<>Nie ma?<br /><span className="text-red">Sprowadzimy.</span></>} sub="Can’t find it? Tell us and we’ll order it in." big />
+          <div className="absolute inset-x-0 top-[560px] h-[520px]">
+            {[['p/kasza.jpg', -8, -300, 40], ['p/ptasie-mleczko.jpg', 3, 0, 0], ['p/winiary.jpg', 9, 300, 50]].map(([src, r, x, y]) => (
+              <div key={String(src)} className="absolute left-1/2 top-0 w-[380px] h-[440px] rounded-[56px] bg-white grid place-items-center shadow-[0_40px_70px_-36px_rgba(28,25,23,.6)]" style={{ transform: `translateX(calc(-50% + ${x}px)) translateY(${y}px) rotate(${r}deg)`, zIndex: x === 0 ? 2 : 1 }}>
+                <img src={img(String(src))} alt="" className="w-[300px] h-[360px] object-contain" />
               </div>
             ))}
           </div>
+          <p className="absolute inset-x-0 top-[1080px] text-center text-[38px] font-bold">Jeden słoik albo pięćdziesiąt kartonów.</p>
           <Foot />
         </Frame>
       );
     case 'post-trade':
       return (
         <Frame w={w} h={h} className="bg-red text-cream">
-          <img src={img('fb/meat-shelf.jpg')} alt="" className="absolute inset-0 w-full h-full object-cover opacity-20" />
-          <div className="absolute left-16 right-16 top-24">
-            <p className="text-[34px] font-bold uppercase tracking-[0.2em] text-gold">Dla firm · For businesses</p>
-            <p className="mt-4 font-display font-extrabold text-[132px] leading-[0.88]">Hurt na kartony.</p>
-            <ul className="mt-12 grid gap-6 text-[46px] font-semibold">
-              {['Ceny hurtowe za karton', 'Stałe zamówienia co tydzień', 'Sprowadzimy, czego potrzebujesz', 'Odbiór lub dostawa'].map((x) => (
-                <li key={x} className="flex items-center gap-6"><span className="w-[52px] h-[52px] rounded-full bg-cream text-red grid place-items-center text-[34px] font-extrabold">✓</span>{x}</li>
-              ))}
-            </ul>
-            <p className="mt-10 text-[34px] text-cream/85">Shops, cafés and restaurants: open a trade account.</p>
+          <Head eyebrow="Dla firm · For businesses" title={<>Hurt na kartony.</>} sub="Shops, cafés and restaurants: open a trade account." light big />
+          <div className="absolute left-1/2 -translate-x-1/2 top-[470px] w-[900px] h-[520px] rounded-[60px] overflow-hidden shadow-[0_50px_90px_-50px_rgba(0,0,0,.7)]">
+            <img src={img('fb/meat-shelf.jpg')} alt="" className="w-full h-full object-cover" />
+          </div>
+          <div className="absolute left-1/2 -translate-x-1/2 top-[900px] w-[820px] rounded-[44px] bg-cream text-ink px-12 py-9 grid grid-cols-2 gap-x-8 gap-y-4 text-[32px] font-bold shadow-[0_30px_60px_-30px_rgba(0,0,0,.5)]">
+            {['Ceny za karton', 'Stałe zamówienia', 'Sprowadzimy wszystko', 'Odbiór w sklepie'].map((x) => (
+              <span key={x} className="flex items-center gap-4"><span className="shrink-0 w-[44px] h-[44px] rounded-full bg-red text-cream grid place-items-center text-[26px]">✓</span>{x}</span>
+            ))}
           </div>
           <Foot dark />
         </Frame>
@@ -119,32 +128,48 @@ export function Asset({ name }: { name: string }) {
     case 'post-christmas':
       return (
         <Frame w={w} h={h} className="bg-ink text-cream">
-          {Array.from({ length: 34 }, (_, i) => <span key={i} className="absolute rounded-full bg-cream/70" style={{ width: 6 + (i % 4) * 3, height: 6 + (i % 4) * 3, left: (i * 197) % 1060, top: (i * 131) % 820 }} />)}
-          <div className="absolute left-16 right-16 top-28 text-center">
-            <p className="text-[34px] font-bold uppercase tracking-[0.2em] text-gold">Wigilia 2026</p>
-            <p className="mt-6 font-display font-extrabold text-[132px] leading-[0.88]">Zamów święta wcześniej.</p>
-            <p className="mt-10 text-[44px] font-semibold leading-tight text-cream/90">Wędliny i wszystko na stół wigilijny. Zapytaj w sklepie o zamówienia.</p>
-            <p className="mt-6 text-[34px] text-cream/70">Order your Christmas Eve food early.</p>
+          {Array.from({ length: 40 }, (_, i) => <span key={i} className="absolute rounded-full bg-cream/60" style={{ width: 5 + (i % 4) * 3, height: 5 + (i % 4) * 3, left: (i * 197) % 1060, top: (i * 131) % 1240 }} />)}
+          <Head eyebrow="Wigilia 2026 · Christmas" title={<>Zamów święta <span className="text-gold">wcześniej.</span></>} sub="Order your Christmas Eve food early, collect when it suits you." light />
+          <div className="absolute inset-x-0 top-[500px] flex justify-center gap-6">
+            {['p/lowicz-syrop.jpg', 'p/ptasie-mleczko.jpg', 'p/tymbark.jpg'].map((src, i) => (
+              <div key={src} className="w-[300px] h-[520px] rounded-[48px] bg-white grid place-items-center" style={{ transform: `rotate(${[-4, 0, 4][i]}deg) translateY(${[30, 0, 30][i]}px)` }}><img src={img(src)} alt="" className="h-[460px] w-[260px] object-contain" /></div>
+            ))}
           </div>
-          <div className="absolute left-1/2 -translate-x-1/2 top-[930px]"><Burst className="w-[220px] h-[220px] text-[40px]">Zamów<br />teraz</Burst></div>
+          <div className="absolute right-[50px] top-[430px]"><Burst className="w-[200px] h-[200px] text-[36px] rotate-[10deg]">Zamów<br />teraz</Burst></div>
           <Foot dark />
         </Frame>
       );
     case 'post-online':
       return (
         <Frame w={w} h={h} className="bg-paper">
-          <div className="absolute left-16 right-16 top-24">
-            <p className="text-[34px] font-bold uppercase tracking-[0.2em] text-red">Nowość · New</p>
-            <p className="mt-4 font-display font-extrabold text-[124px] leading-[0.88]">Nasz Sklep jest teraz online.</p>
-            <p className="mt-8 text-[42px] font-semibold leading-tight">Zamów z odbiorem w sklepie lub z dostawą. Our shop is now online.</p>
-          </div>
-          <div className="absolute left-1/2 -translate-x-1/2 top-[700px] w-[440px] h-[420px] rounded-[60px] bg-white shadow-[0_40px_80px_-40px_rgba(0,0,0,.5)] overflow-hidden">
-            <div className="h-[96px] bg-cream flex items-center px-6"><Wordmark className="text-[34px]" draw={false} /></div>
-            <div className="grid grid-cols-2 gap-4 p-6">
-              {['p/tymbark.jpg', 'p/ptasie-mleczko.jpg', 'p/lowicz-sos.jpg', 'p/kasza.jpg'].map((s) => <div key={s} className="h-[130px] rounded-3xl bg-paper grid place-items-center"><img src={img(s)} alt="" className="h-[110px] object-contain" /></div>)}
+          <Head eyebrow="Nowość · New" title={<>Zamów online.<br /><span className="text-red">Odbierz w sklepie.</span></>} sub="Order online, collect from St Mary’s Road. Pay online or at the counter." />
+          <div className="absolute left-1/2 -translate-x-1/2 top-[520px] w-[620px] rounded-[64px] bg-white shadow-[0_50px_90px_-50px_rgba(28,25,23,.55)] overflow-hidden">
+            <div className="bg-red text-cream px-12 py-10">
+              <p className="text-[26px] font-bold uppercase tracking-[0.18em] text-cream/80">Pokaż przy ladzie</p>
+              <p className="font-display font-extrabold text-[130px] leading-none tracking-wider">4821</p>
+            </div>
+            <div className="px-12 py-9 grid gap-5 text-[30px] font-semibold">
+              {[['Przyjęte', true], ['Pakujemy', true], ['Gotowe do odbioru', true]].map(([x], i) => (
+                <span key={String(x)} className="flex items-center gap-5"><span className={`w-[52px] h-[52px] rounded-full grid place-items-center text-[28px] ${i === 2 ? 'bg-leaf text-cream' : 'bg-red/15 text-red'}`}>✓</span>{String(x)}</span>
+              ))}
             </div>
           </div>
           <Foot />
+        </Frame>
+      );
+    case 'ig-banner':
+      return (
+        <Frame w={w} h={h} className="bg-paper">
+          <div className="absolute inset-x-0 bottom-0 h-[52%]"><Southampton className="w-full h-full" /></div>
+          <div className="absolute left-[80px] top-[130px] w-[900px]">
+            <p className="text-[40px] font-bold uppercase tracking-[0.2em] text-red">Polskie jedzenie</p>
+            <p className="mt-4 font-display font-extrabold text-[120px] leading-[0.9]">Prawdziwy smak domu.</p>
+          </div>
+          <div className="absolute left-[1080px] w-[1080px] top-[200px] grid place-items-center"><Wordmark className="text-[150px]" draw={false} place /></div>
+          <div className="absolute left-[2260px] top-[130px] w-[900px]">
+            <p className="text-[40px] font-bold uppercase tracking-[0.2em] text-red">Odwiedź nas</p>
+            <p className="mt-4 font-display font-extrabold text-[100px] leading-[0.92]">120 St Mary’s Road, Southampton</p>
+          </div>
         </Frame>
       );
     case 'og-home':
@@ -237,13 +262,16 @@ export function Asset({ name }: { name: string }) {
     case 'story-offer':
       return (
         <Frame w={w} h={h} className="bg-red text-cream">
-          <div className="absolute inset-x-0 top-[240px] text-center">
+          <div className="absolute inset-x-0 top-[200px] text-center">
             <p className="text-[44px] font-bold uppercase tracking-[0.2em] text-gold">Promocja</p>
-            <p className="mt-6 font-display font-extrabold text-[150px] leading-[0.88]">Zupka<br />Kaczka</p>
-            <p className="mt-6 text-[48px]">Vifon · 70 g</p>
+            <p className="mt-5 font-display font-extrabold text-[130px] leading-[0.9]">Sos do spaghetti</p>
+            <p className="mt-5 text-[48px]">Łowicz · 500 g</p>
           </div>
-          <div className="absolute left-1/2 -translate-x-1/2 top-[900px]"><Burst className="w-[460px] h-[460px] text-[120px] rotate-[6deg]">2 za<br />£1.50</Burst></div>
-          <div className="absolute inset-x-0 bottom-[160px] text-center"><Wordmark className="text-[90px]" light place draw={false} /></div>
+          <div className="absolute left-1/2 -translate-x-1/2 top-[700px] w-[700px] h-[760px] rounded-[80px] bg-white grid place-items-center shadow-[0_60px_100px_-60px_rgba(0,0,0,.7)]">
+            <img src={img('p/lowicz-sos.jpg')} alt="" className="h-[660px] object-contain" />
+          </div>
+          <div className="absolute right-[80px] top-[620px]"><Burst className="w-[340px] h-[340px] text-[96px] rotate-[8deg]">2 za<br />£3</Burst></div>
+          <div className="absolute inset-x-0 bottom-[130px] text-center"><Wordmark className="text-[90px]" light place draw={false} /></div>
         </Frame>
       );
   }
