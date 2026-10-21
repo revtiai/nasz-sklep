@@ -108,7 +108,7 @@ function Board() {
 
       <header className="relative overflow-hidden bg-red text-cream">
         <div className="max-w-[1320px] mx-auto px-5 md:px-10 pt-14 md:pt-20 relative z-10 md:text-center">
-          <p className="font-bold text-gold text-sm uppercase tracking-[0.14em] sm:tracking-[0.22em]">Brand guidelines · Księga znaku</p>
+          <p className="font-bold text-gold text-[0.72rem] sm:text-sm uppercase tracking-[0.14em] sm:tracking-[0.22em] whitespace-nowrap">Brand guidelines · Księga znaku</p>
           <div className="mt-8 text-[clamp(2.6rem,10vw,8rem)]"><Wordmark light place /></div>
           <p className="mt-10 text-[clamp(1.6rem,3.6vw,3rem)] font-display font-extrabold max-w-4xl md:mx-auto leading-[1.02]"><span className="block">Prawdziwy smak domu.</span><span className="block">A real taste of home.</span></p>
           <p className="mt-4 text-cream/85 max-w-2xl md:mx-auto text-lg">Polish and Eastern European groceries, 120 St Mary’s Road, Southampton. For homes, shops and kitchens.</p>
