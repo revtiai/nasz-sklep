@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
-import { ArrowRight, Building2, CalendarClock, Clock, MapPin, PackageSearch, RefreshCw, ShoppingBasket, Truck } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Building2, CalendarClock, Clock, MapPin, PackageSearch, RefreshCw, ShoppingBasket, Truck } from 'lucide-react';
 import { CATEGORIES, OFFER_IDS, PRODUCTS, SHOP } from '../data.ts';
 import { gbp, product, useStore } from '../store.tsx';
 import { Burst, Eyebrow, ProductImage, Reveal, Stagger, btn, ease, img, useT } from '../ui.tsx';
@@ -217,9 +217,90 @@ function Aisles() {
 }
 
 /** Offers slide sideways as the page scrolls: two at first, the rest arrive one by one. */
+function useMatch(query: string) {
+  const [match, setMatch] = useState(() => typeof window !== 'undefined' && window.matchMedia(query).matches);
+  useEffect(() => {
+    const mq = window.matchMedia(query);
+    const on = () => setMatch(mq.matches);
+    on();
+    mq.addEventListener('change', on);
+    return () => mq.removeEventListener('change', on);
+  }, [query]);
+  return match;
+}
+
 function Offers() {
   const t = useT();
   const reduce = useReducedMotion();
+  const touch = useMatch('(max-width: 1023px), (pointer: coarse)');
+  if (reduce && !touch) {
+    const items = OFFER_IDS.map((id) => product(id));
+    return (
+      <section className="pt-16 md:pt-24 max-w-7xl mx-auto px-4 md:px-8">
+        <h2 className="text-[clamp(2rem,5vw,3.2rem)] font-extrabold">{t('Good deals this week', 'Okazje tygodnia')}</h2>
+        <ul className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">{items.map((p) => <ProductCard key={p.id} p={p} />)}</ul>
+      </section>
+    );
+  }
+  return touch ? <OfferSwipe /> : <OfferTrack />;
+}
+
+function OfferSwipe() {
+  const t = useT();
+  const row = useRef<HTMLUListElement>(null);
+  const thumb = useRef<HTMLDivElement>(null);
+  const [ends, setEnds] = useState({ start: true, end: false });
+  const items = OFFER_IDS.map((id) => product(id));
+  useEffect(() => {
+    const el = row.current;
+    if (!el) return;
+    const on = () => {
+      const max = el.scrollWidth - el.clientWidth;
+      const k = max > 0 ? el.scrollLeft / max : 1;
+      const f = el.clientWidth / el.scrollWidth;
+      if (thumb.current) thumb.current.style.transform = `translateX(${k * (1 / f - 1) * 100}%)`;
+      if (thumb.current) thumb.current.style.width = `${f * 100}%`;
+      const start = el.scrollLeft < 8;
+      const end = el.scrollLeft > max - 8;
+      setEnds((e) => (e.start === start && e.end === end ? e : { start, end }));
+    };
+    on();
+    el.addEventListener('scroll', on, { passive: true });
+    window.addEventListener('resize', on);
+    return () => { el.removeEventListener('scroll', on); window.removeEventListener('resize', on); };
+  }, []);
+  const step = (dir: 1 | -1) => {
+    const el = row.current;
+    if (!el) return;
+    const card = el.querySelector('li');
+    const w = card ? card.getBoundingClientRect().width + 16 : el.clientWidth * 0.8;
+    el.scrollBy({ left: dir * w, behavior: 'smooth' });
+  };
+  return (
+    <section className="pt-16 md:pt-24" aria-roledescription="carousel" aria-label={t('Good deals this week', 'Okazje tygodnia')}>
+      <div className="max-w-7xl mx-auto px-4 md:px-8">
+        <Eyebrow>{t('Special offers', 'Promocje')}</Eyebrow>
+        <h2 className="mt-2 text-[clamp(2rem,5vw,3.2rem)] font-extrabold leading-[1.05]">{t('Good deals this week', 'Okazje tygodnia')}</h2>
+        <p className="mt-2 text-ink/60 font-semibold flex items-center gap-1.5">{t('Swipe sideways for more', 'Przesuń w bok po więcej')}<ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" /></p>
+      </div>
+      <motion.ul ref={row} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }} variants={{ hidden: {}, show: { transition: { staggerChildren: 0.06 } } }} className="mt-5 flex gap-4 overflow-x-auto overscroll-x-contain snap-x snap-mandatory no-scrollbar px-4 md:px-8 scroll-px-4 md:scroll-px-8 pt-1 pb-5">
+        {items.map((p) => <ProductCard key={p.id} p={p} className="w-[70vw] sm:w-[40vw] md:w-[30vw] max-w-[280px] shrink-0 snap-start" />)}
+        <li aria-hidden="true" className="w-0 shrink-0" />
+      </motion.ul>
+      <div className="max-w-7xl mx-auto px-4 md:px-8">
+        <div className="flex items-center gap-3">
+          <div className="flex-1 h-1.5 rounded-full bg-ink/10 overflow-hidden"><div ref={thumb} className="h-full rounded-full bg-red will-change-transform" style={{ width: '30%' }} /></div>
+          <button type="button" onClick={() => step(-1)} disabled={ends.start} aria-label={t('Previous offers', 'Poprzednie promocje')} className="press shrink-0 w-12 h-12 rounded-full border-2 border-ink/15 bg-white grid place-items-center transition-opacity disabled:opacity-30"><ArrowLeft className="w-5 h-5" /></button>
+          <button type="button" onClick={() => step(1)} disabled={ends.end} aria-label={t('More offers', 'Więcej promocji')} className="press shrink-0 w-12 h-12 rounded-full bg-red text-cream grid place-items-center transition-opacity disabled:opacity-30"><ArrowRight className="w-5 h-5" /></button>
+        </div>
+        <p className="mt-3 text-sm text-ink/50">{t('Offers are from the shop’s past Facebook posts, as examples.', 'Promocje pochodzą z wcześniejszych postów sklepu, jako przykład.')}</p>
+      </div>
+    </section>
+  );
+}
+
+function OfferTrack() {
+  const t = useT();
   const section = useRef<HTMLElement>(null);
   const track = useRef<HTMLUListElement>(null);
   const [dist, setDist] = useState(0);
@@ -234,14 +315,6 @@ function Offers() {
   const x = useSpring(xRaw, { stiffness: 120, damping: 24, mass: 0.4 });
   const bar = useTransform(scrollYProgress, [0.04, 0.96], [0, 1]);
   const items = OFFER_IDS.map((id) => product(id));
-  if (reduce) {
-    return (
-      <section className="pt-16 md:pt-24 max-w-7xl mx-auto px-4 md:px-8">
-        <h2 className="text-[clamp(2rem,5vw,3.2rem)] font-extrabold">{t('Good deals this week', 'Okazje tygodnia')}</h2>
-        <ul className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">{items.map((p) => <ProductCard key={p.id} p={p} />)}</ul>
-      </section>
-    );
-  }
   return (
     <section ref={section} className="relative mt-16 md:mt-24" style={{ height: `calc(100vh + ${dist}px)` }}>
       <div className="sticky top-[72px] md:top-[84px] h-[calc(100vh-72px)] md:h-[calc(100vh-84px)] flex flex-col justify-center overflow-hidden">
