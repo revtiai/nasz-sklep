@@ -23,7 +23,7 @@ export default function Shop({ initial }: { initial?: string }) {
   return (
     <>
       <PageHead eyebrow={t('The shop', 'Sklep')} title={t('Everything on the shelves', 'Wszystko z półek')} body={t('Shop by the item, or switch to trade prices to buy by the case.', 'Kupuj na sztuki albo przełącz na ceny hurtowe i kupuj na kartony.')} />
-      <div className="max-w-7xl mx-auto px-4 md:px-8 pb-20">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 pb-10">
         <div className="flex flex-col md:flex-row gap-3 md:items-center justify-between">
           <PriceSwitch />
           <label className="flex items-center gap-2 text-[1rem] font-semibold">

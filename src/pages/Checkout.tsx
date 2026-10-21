@@ -81,7 +81,7 @@ export default function Checkout() {
   return (
     <>
       <PageHead eyebrow={t('Checkout', 'Zamówienie')} title={t('Order now, collect from the shop.', 'Zamów teraz, odbierz w sklepie.')} body={t('We pack your order and have it ready at the counter. Pay online now, or pay when you collect.', 'Spakujemy zamówienie i przygotujemy je przy ladzie. Zapłać online teraz albo przy odbiorze.')} />
-      <form onSubmit={place} className="max-w-7xl mx-auto px-4 md:px-8 pb-20 grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-6 lg:gap-8 items-start">
+      <form onSubmit={place} className="max-w-7xl mx-auto px-4 md:px-8 pb-10 grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-6 lg:gap-8 items-start">
         <div className="grid gap-5 min-w-0">
           <Step n={1} title={t('How would you like it?', 'Jak chcesz odebrać?')}>
             <div className="grid sm:grid-cols-2 gap-3">

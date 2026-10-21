@@ -15,7 +15,7 @@ export default function ProductPage({ id }: { id?: string }) {
   const related = PRODUCTS.filter((x) => x.category === p.category && x.id !== p.id).slice(0, 4);
   const fav = account?.favourites.includes(p.id);
   return (
-    <div className="max-w-7xl mx-auto px-4 md:px-8 pt-6 md:pt-10 pb-20">
+    <div className="max-w-7xl mx-auto px-4 md:px-8 pt-6 md:pt-10 pb-10">
       <a href="#/shop" className="inline-flex items-center gap-2 font-semibold min-h-12"><ArrowLeft className="w-5 h-5" />{t('Back to the shop', 'Wróć do sklepu')}</a>
       <div className="mt-4 grid lg:grid-cols-2 gap-8 lg:gap-14 items-start">
         <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6, ease }} className="relative">

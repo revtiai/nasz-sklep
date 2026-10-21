@@ -59,7 +59,7 @@ export default function RequestPage() {
           ))}
         </ol>
       </div>
-      <div className="max-w-7xl mx-auto px-4 md:px-8 pt-8 pb-20 grid lg:grid-cols-[1.2fr_1fr] gap-8 items-start">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 pt-8 pb-10 grid lg:grid-cols-[1.2fr_1fr] gap-8 items-start">
         <form onSubmit={submit} className="rounded-[2rem] bg-white p-6 md:p-8 grid gap-5">
           <div>
             <p className="font-semibold text-[1.05rem]">{t('Popular requests', 'Często zamawiane')}</p>

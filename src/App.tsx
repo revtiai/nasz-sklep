@@ -258,7 +258,7 @@ function Footer() {
   ];
   return (
     <footer className="relative bg-gradient-to-b from-cream via-paper to-paper overflow-hidden flex flex-col min-h-[680px] md:min-h-[min(100svh,860px)]">
-      <div className="relative z-10 flex flex-col items-center text-center px-4 pt-14 md:pt-16">
+      <div className="relative z-10 flex flex-col items-center text-center px-4 pt-10 md:pt-12">
         <Wordmark className="text-[2.4rem] md:text-[3rem]" place />
         <p className="mt-4 text-ink/75 max-w-xl">{t('Polish and Eastern European food on St Mary’s Road. For your kitchen, your shop or your restaurant.', 'Polskie i wschodnioeuropejskie jedzenie na St Mary’s Road. Do domu, sklepu i restauracji.')}</p>
         <nav className="mt-8" aria-label="Footer">

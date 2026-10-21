@@ -26,10 +26,10 @@ export default function Home() {
 const HEADLINES: { en: { text: string; red: number[] }; pl: { text: string; red: number[] } }[] = [
   { en: { text: 'A real taste of home.', red: [4] }, pl: { text: 'Prawdziwy smak domu.', red: [2] } },
   { en: { text: 'Order online, collect today.', red: [3] }, pl: { text: 'Zamów online, odbierz dziś.', red: [3] } },
-  { en: { text: 'Stocking a café? Buy by the case.', red: [4, 5, 6] }, pl: { text: 'Prowadzisz kawiarnię? Kupuj na kartony.', red: [3, 4] } },
+  { en: { text: 'Stocking a café? Buy by the case.', red: [4, 5, 6] }, pl: { text: 'Masz kawiarnię? Kupuj hurtem.', red: [2, 3] } },
   { en: { text: 'Can’t find it? We’ll order it in.', red: [4, 5, 6] }, pl: { text: 'Nie ma? Sprowadzimy.', red: [2] } },
-  { en: { text: 'Warm kabanosy from the smokehouse.', red: [1] }, pl: { text: 'Ciepłe kabanosy, prosto z wędzarni.', red: [1] } },
-  { en: { text: 'Shopping for Mum? She can collect.', red: [3, 4, 5] }, pl: { text: 'Zakupy dla mamy? Odbierze ktoś inny.', red: [3, 4, 5] } },
+  { en: { text: 'Kabanosy from the smokehouse.', red: [0] }, pl: { text: 'Kabanosy prosto z wędzarni.', red: [0] } },
+  { en: { text: 'Order for Mum. She collects.', red: [3, 4] }, pl: { text: 'Dla mamy? Odbierze sama.', red: [2, 3] } },
 ];
 
 const SCENES = [
@@ -85,8 +85,14 @@ function Hero() {
           <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-[0.85rem] font-bold shadow-[0_1px_0_rgb(28_25_23/0.1)]">
             <MapPin className="w-4 h-4 text-red" aria-hidden="true" /> {SHOP.street}, {SHOP.town}
           </motion.p>
-          <h1 className="mt-5 text-[clamp(2.15rem,9.6vw,4rem)] max-[359px]:text-[1.8rem] lg:text-[4.3vw] xl:text-[3.6rem] font-extrabold leading-[0.92] min-h-[2.84em]">
+          <h1 className="mt-5 text-[clamp(2.15rem,9.6vw,4rem)] max-[359px]:text-[1.8rem] lg:text-[4.3vw] xl:text-[3.6rem] font-extrabold leading-[0.92] grid lg:max-w-[9.6em]">
             <span className="sr-only">{t('Nasz Sklep: a real taste of home. Polish groceries in Southampton.', 'Nasz Sklep: prawdziwy smak domu. Polskie produkty w Southampton.')}</span>
+            {HEADLINES.map((hl, k) => (
+              <span key={k} aria-hidden="true" className="invisible [grid-area:1/1] self-end">
+                {hl[lang].text.split(' ').map((w, j) => <span key={j} className="inline-block mr-[0.22em] pb-[0.06em]">{w}</span>)}
+              </span>
+            ))}
+            <span className="[grid-area:1/1] self-end">
             <AnimatePresence mode="wait">
               <motion.span key={`${lang}${h}`} aria-hidden="true" className="block" initial="hidden" animate="show" exit="out" variants={{ hidden: {}, show: { transition: { staggerChildren: 0.06, delayChildren: h === 0 ? 0.2 : 0 } }, out: { transition: { staggerChildren: 0.03 } } }}>
                 {headline.map((w, k) => (
@@ -99,6 +105,7 @@ function Hero() {
                 ))}
               </motion.span>
             </AnimatePresence>
+            </span>
           </h1>
           <div className="mt-2 flex gap-1.5" aria-hidden="true">
             {HEADLINES.map((_, k) => <span key={k} className="h-1.5 rounded-full transition-all duration-500" style={{ width: k === h ? 28 : 8, background: k === h ? '#D7141A' : 'rgba(28,25,23,.18)' }} />)}
@@ -349,7 +356,7 @@ function Smokehouse() {
   return (
     <section ref={ref} className="relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-cream via-[#f6dfcb] to-cream" aria-hidden="true" />
-      <div className="relative max-w-7xl mx-auto px-4 md:px-8 py-20 md:py-28 grid lg:grid-cols-2 gap-12 items-center">
+      <div className="relative max-w-7xl mx-auto px-4 md:px-8 pt-20 md:pt-28 pb-8 md:pb-12 grid lg:grid-cols-2 gap-12 items-center">
         <div>
           <Reveal><Eyebrow>{t('From the counter', 'Z lady')}</Eyebrow></Reveal>
           <Reveal delay={0.05}><h2 className="mt-3 text-[clamp(2.4rem,6vw,4.4rem)] font-extrabold leading-[0.92]">{t('Warm smoked meats, the best in the UK.', 'Ciepłe wędliny, najlepsze w UK.')}</h2></Reveal>
@@ -396,30 +403,57 @@ function RequestBand() {
 }
 
 /** The trade walkthrough is pinned while you scroll; each step takes over in turn and the line fills. */
-function TradeSteps() {
+function useTradeSteps() {
   const t = useT();
-  const reduce = useReducedMotion();
-  const ref = useRef<HTMLElement>(null);
-  const steps = [
+  return [
     { icon: Building2, h: t('Open a trade account', 'Załóż konto hurtowe'), b: t('Tell us about your shop, café or restaurant. We check and approve every account ourselves.', 'Opowiedz nam o swojej firmie. Każde konto zatwierdzamy sami.'), img: 'fb/meat-shelf.jpg' },
     { icon: ShoppingBasket, h: t('Order by the case', 'Zamawiaj na kartony'), b: t('See trade prices on every product and add whole cases in one tap.', 'Widzisz ceny hurtowe i dodajesz całe kartony jednym kliknięciem.'), img: 'fb/deli-kabanosy.jpg' },
     { icon: RefreshCw, h: t('Set up a regular order', 'Ustaw stałe zamówienie'), b: t('The same list every week or fortnight. Change, pause or skip it any time.', 'Ta sama lista co tydzień lub dwa. Zmień, wstrzymaj lub pomiń w każdej chwili.'), img: 'fb/veg-tomatoes.jpg' },
     { icon: CalendarClock, h: t('Collect, or delivery by arrangement', 'Odbiór lub dostawa po uzgodnieniu'), b: t('We pack your cases for pick-up at St Mary’s Road. Regular trade deliveries can be arranged.', 'Pakujemy kartony do odbioru na St Mary’s Road. Stałe dostawy hurtowe do uzgodnienia.'), img: 'fb/meat-cuts.jpg' },
   ];
+}
+
+function TradeSteps() {
+  const reduce = useReducedMotion();
+  const touch = useMatch('(max-width: 1023px), (pointer: coarse)');
+  return reduce || touch ? <TradeStepsList /> : <TradeStepsPinned />;
+}
+
+function TradeStepsList() {
+  const t = useT();
+  const reduce = useReducedMotion();
+  const steps = useTradeSteps();
+  return (
+    <section className="px-4 md:px-8 pt-14 md:pt-20 max-w-7xl mx-auto">
+      <Eyebrow>{t('For businesses', 'Dla firm')}</Eyebrow>
+      <h2 className="mt-2 text-[clamp(1.9rem,5vw,3.4rem)] font-extrabold leading-[0.98]">{t('Buying for a business? It’s simple.', 'Kupujesz dla firmy? To proste.')}</h2>
+      <ol className="mt-6 grid md:grid-cols-2 gap-3 md:gap-4">
+        {steps.map((st, k) => (
+          <motion.li key={st.h} initial={reduce ? false : { opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '0px 0px -8% 0px' }} transition={{ duration: 0.5, delay: (k % 2) * 0.06, ease }} className="grid grid-cols-[88px_1fr] sm:grid-cols-[120px_1fr] rounded-[1.6rem] bg-white overflow-hidden shadow-[0_1px_0_rgb(28_25_23/0.08)]">
+            <img src={img(st.img)} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover" />
+            <div className="p-4 sm:p-5">
+              <span className="inline-flex items-center gap-2 font-bold text-red text-sm"><span className="w-7 h-7 rounded-full bg-red text-cream grid place-items-center font-display font-extrabold">{k + 1}</span><st.icon className="w-4 h-4" aria-hidden="true" /></span>
+              <h3 className="mt-2 font-display font-extrabold text-[1.2rem] sm:text-[1.35rem] leading-tight">{st.h}</h3>
+              <p className="mt-1 text-[0.98rem] text-ink/70 leading-snug">{st.b}</p>
+            </div>
+          </motion.li>
+        ))}
+      </ol>
+      <a href="#/trade" className={`${btn.red} mt-6`}>{t('Apply for a trade account', 'Załóż konto hurtowe')}<ArrowRight className="w-5 h-5" aria-hidden="true" /></a>
+    </section>
+  );
+}
+
+function TradeStepsPinned() {
+  const t = useT();
+  const ref = useRef<HTMLElement>(null);
+  const steps = useTradeSteps();
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] });
   const [active, setActive] = useState(0);
   useMotionValueEvent(scrollYProgress, 'change', (v) => setActive(Math.min(steps.length - 1, Math.max(0, Math.floor(v * steps.length * 0.999)))));
   const fill = useTransform(scrollYProgress, [0, 1], [0, 1]);
-  if (reduce) {
-    return (
-      <section className="px-4 md:px-8 pt-20 max-w-7xl mx-auto">
-        <h2 className="text-[clamp(2.2rem,5.5vw,4rem)] font-extrabold">{t('Buying for a business? It’s simple.', 'Kupujesz dla firmy? To proste.')}</h2>
-        <ol className="mt-8 grid md:grid-cols-2 gap-4">{steps.map((s) => <li key={s.h} className="rounded-3xl bg-white p-6"><h3 className="text-2xl font-extrabold">{s.h}</h3><p className="mt-2 text-ink/70">{s.b}</p></li>)}</ol>
-      </section>
-    );
-  }
   return (
-    <section ref={ref} className="relative mt-16" style={{ height: `${steps.length * 85 + 40}vh` }}>
+    <section ref={ref} className="relative mt-16" style={{ height: `${steps.length * 60 + 40}vh` }}>
       <div className="sticky top-[72px] md:top-[84px] h-[calc(100vh-72px)] md:h-[calc(100vh-84px)] flex items-center">
         <div className="max-w-7xl w-full mx-auto px-4 md:px-8 grid lg:grid-cols-[0.95fr_1.05fr] gap-6 lg:gap-14 items-center">
           <div>

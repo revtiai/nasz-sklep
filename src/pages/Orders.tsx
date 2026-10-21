@@ -28,7 +28,7 @@ export function TrackOrder({ id }: { id?: string }) {
   const at = FLOW.indexOf(o.status);
   const icons = [ClipboardList, Package, PackageCheck, CheckCircle2];
   return (
-    <div className="max-w-3xl mx-auto px-4 md:px-8 pt-10 pb-20">
+    <div className="max-w-3xl mx-auto px-4 md:px-8 pt-10 pb-10">
       <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: 'spring', stiffness: 200, damping: 14 }}><CheckCircle2 className="w-16 h-16 text-leaf" /></motion.div>
       <h1 className="mt-4 text-[clamp(2.2rem,6vw,3.4rem)] font-extrabold leading-[0.95]">{t('Thank you. Dziękujemy!', 'Dziękujemy!')}</h1>
       <p className="mt-3 text-lg text-ink/70">{o.method === 'collect' ? t('We’ll pack your order and text you when it’s ready at the counter.', 'Spakujemy zamówienie i wyślemy SMS, gdy będzie gotowe przy ladzie.') : t('We’ll call to agree your delivery day.', 'Zadzwonimy, aby ustalić dzień dostawy.')}</p>
@@ -123,7 +123,7 @@ export function ShopOrders() {
   const cols: ShopOrderStatus[] = ['new', 'packing', 'ready'];
   const toTake = orders.filter((o) => o.status !== 'collected' && !o.paid).reduce((s, o) => s + o.total, 0);
   return (
-    <div className="max-w-7xl mx-auto px-4 md:px-8 pt-8 pb-20">
+    <div className="max-w-7xl mx-auto px-4 md:px-8 pt-8 pb-10">
       <p className="font-bold text-[0.8rem] uppercase tracking-[0.2em] text-red">{t('For the shop', 'Dla sklepu')}</p>
       <h1 className="mt-2 text-[clamp(2.2rem,6vw,3.6rem)] font-extrabold leading-[0.95]">{t('Pick-up orders', 'Zamówienia do odbioru')}</h1>
       <p className="mt-3 text-lg text-ink/70 max-w-2xl">{t('Every online order lands here. Pack it, tap “ready” and the customer gets a text. On the live shop this is the Shopify app on the shop’s phone or till.', 'Każde zamówienie online trafia tutaj. Spakuj, kliknij „gotowe”, a klient dostanie SMS. W prawdziwym sklepie to aplikacja Shopify na telefonie lub kasie.')}</p>

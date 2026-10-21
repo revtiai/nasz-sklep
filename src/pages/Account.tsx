@@ -21,7 +21,7 @@ function SignIn({ onDemo }: { onDemo: () => void }) {
   return (
     <>
       <PageHead eyebrow={t('My account', 'Moje konto')} title={t('Sign in', 'Zaloguj się')} body={t('Trade customers sign in to see case prices, past orders and regular orders.', 'Klienci hurtowi logują się, aby zobaczyć ceny za karton, historię i stałe zamówienia.')} />
-      <div className="max-w-xl mx-auto px-4 md:px-8 pb-20">
+      <div className="max-w-xl mx-auto px-4 md:px-8 pb-10">
         <form onSubmit={submit} className="rounded-[2rem] bg-white p-6 md:p-8 grid gap-5">
           <label className="grid gap-2 font-semibold text-[1.05rem]">Email<input type="email" autoComplete="email" className={field} /></label>
           <label className="grid gap-2 font-semibold text-[1.05rem]">{t('Password', 'Hasło')}<input type="password" autoComplete="current-password" className={field} /></label>
@@ -54,7 +54,7 @@ function Dashboard() {
   };
   const date = (d: string) => new Date(d).toLocaleDateString(lang === 'pl' ? 'pl-PL' : 'en-GB', { day: 'numeric', month: 'long' });
   return (
-    <div className="max-w-7xl mx-auto px-4 md:px-8 pt-8 md:pt-12 pb-20">
+    <div className="max-w-7xl mx-auto px-4 md:px-8 pt-8 md:pt-12 pb-10">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="font-bold text-[0.8rem] uppercase tracking-[0.2em] text-red">{t('Trade account', 'Konto hurtowe')}</p>

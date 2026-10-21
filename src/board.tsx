@@ -50,7 +50,7 @@ function Shot({ file, title, size, ratio, className = '' }: { file: string; titl
 function Chapter({ id, n, title, intro, children, tone = 'bg-cream' }: { id: string; n: string; title: string; intro: string; children: ReactNode; tone?: string }) {
   return (
     <section id={id} className={`${tone} scroll-mt-20`}>
-      <div className="max-w-[1320px] mx-auto px-5 md:px-10 py-20 md:py-28">
+      <div className="max-w-[1320px] mx-auto px-5 md:px-10 py-14 md:py-20">
         <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="grid md:grid-cols-[auto_1fr] gap-4 md:gap-10 items-end border-b-2 border-ink/10 pb-8 mb-12">
           <p className="font-display font-extrabold text-[clamp(4rem,10vw,8rem)] leading-[0.8] text-red">{n}</p>
           <div>
@@ -107,14 +107,17 @@ function Board() {
       </nav>
 
       <header className="relative overflow-hidden bg-red text-cream">
-        <div className="max-w-[1320px] mx-auto px-5 md:px-10 pt-16 md:pt-20 pb-36 md:pb-52 relative z-10">
-          <p className="font-bold text-gold text-sm uppercase tracking-[0.22em]">Brand guidelines · Księga znaku</p>
+        <div className="max-w-[1320px] mx-auto px-5 md:px-10 pt-14 md:pt-20 relative z-10 md:text-center">
+          <p className="font-bold text-gold text-sm uppercase tracking-[0.14em] sm:tracking-[0.22em]">Brand guidelines · Księga znaku</p>
           <div className="mt-8 text-[clamp(2.6rem,10vw,8rem)]"><Wordmark light place /></div>
-          <p className="mt-10 text-[clamp(1.6rem,3.6vw,3rem)] font-display font-extrabold max-w-4xl leading-[1.02]">Prawdziwy smak domu. A real taste of home.</p>
-          <p className="mt-4 text-cream/85 max-w-2xl text-lg">Polish and Eastern European groceries, 120 St Mary’s Road, Southampton. For homes, shops and kitchens.</p>
-          <a href={ZIP} download className="press mt-8 inline-flex items-center gap-2 rounded-full bg-cream text-red font-bold min-h-14 px-7"><Download className="w-5 h-5" />Download all brand assets (zip)</a>
+          <p className="mt-10 text-[clamp(1.6rem,3.6vw,3rem)] font-display font-extrabold max-w-4xl md:mx-auto leading-[1.02]"><span className="block">Prawdziwy smak domu.</span><span className="block">A real taste of home.</span></p>
+          <p className="mt-4 text-cream/85 max-w-2xl md:mx-auto text-lg">Polish and Eastern European groceries, 120 St Mary’s Road, Southampton. For homes, shops and kitchens.</p>
+          <a href={ZIP} download className="press mt-8 inline-flex items-center gap-2 rounded-full bg-cream text-red font-bold min-h-14 px-7"><Download className="w-5 h-5 shrink-0" /><span className="sm:hidden">Download all assets (zip)</span><span className="hidden sm:inline">Download all brand assets (zip)</span></a>
         </div>
-        <div className="absolute inset-x-0 bottom-0 h-[30%] opacity-25 [filter:invert(1)]"><Southampton className="w-full h-full" still /></div>
+        <div aria-hidden="true" className="relative mt-6 md:mt-2 opacity-30 [filter:invert(1)] pointer-events-none">
+          <div className="md:hidden aspect-[640/440]"><Southampton className="w-full h-full block" view="1004 80 640 440" fit="xMidYMax meet" /></div>
+          <div className="hidden md:block aspect-[1600/420]"><Southampton className="w-full h-full block" view="0 80 1600 420" fit="xMidYMax meet" /></div>
+        </div>
       </header>
 
       <Chapter id="brand" n="01" title="Brand" intro="Everything comes from what the shop already has: the red sign over the door, the offer posters and the counter.">

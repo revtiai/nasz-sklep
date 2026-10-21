@@ -36,7 +36,7 @@ export default function Trade() {
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-4 md:px-8 py-16 md:py-24">
+      <section className="max-w-7xl mx-auto px-4 md:px-8 pt-16 md:pt-24 pb-4 md:pb-6">
         <Reveal><Eyebrow>{t('What you get', 'Co zyskujesz')}</Eyebrow><h2 className="mt-2 text-[clamp(2rem,5vw,3.2rem)] font-extrabold">{t('An account that remembers your order', 'Konto, które pamięta Twoje zamówienia')}</h2></Reveal>
         <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {perks.map(([Icon, h, b], i) => (
@@ -52,7 +52,7 @@ export default function Trade() {
       </section>
 
       <section id="apply" className="scroll-mt-24 bg-gradient-to-b from-cream via-paper to-cream">
-        <div className="max-w-3xl mx-auto px-4 md:px-8 py-16 md:py-24">
+        <div className="max-w-3xl mx-auto px-4 md:px-8 pt-10 md:pt-14 pb-12 md:pb-16">
           <Reveal>
             <h2 className="text-[clamp(2rem,5vw,3.2rem)] font-extrabold leading-[0.95]">{t('Apply for a trade account', 'Wniosek o konto hurtowe')}</h2>
             <p className="mt-3 text-lg text-ink/70">{t('Takes about two minutes. We’ll call you to set things up.', 'Zajmie około dwóch minut. Zadzwonimy, aby wszystko ustawić.')}</p>
