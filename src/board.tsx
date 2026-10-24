@@ -10,6 +10,7 @@ import { StoreProvider } from './store.tsx';
 import { Southampton } from './Southampton.tsx';
 import { PriceSwitch, ProductCard } from './pages/parts.tsx';
 import { PRODUCTS } from './data.ts';
+import { Feedback, REVIEW } from './Feedback.tsx';
 
 const COLOURS = [
   ['Czerwień', 'Shop red', '#D7141A', 'The sign, buttons, offers', 'text-cream'],
@@ -67,7 +68,7 @@ function Chapter({ id, n, title, intro, children, tone = 'bg-cream' }: { id: str
 function Block({ label, children, className = '', note }: { label: string; children: ReactNode; className?: string; note?: string }) {
   return (
     <motion.div initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '0px 0px -10% 0px' }} transition={{ duration: 0.6 }} className={`rounded-[2rem] bg-white p-6 md:p-9 ${className}`}>
-      <p className="font-bold text-red text-xs uppercase tracking-[0.22em] mb-5">{label}</p>
+      <p data-section={label} className="font-bold text-red text-xs uppercase tracking-[0.22em] mb-5">{label}</p>
       {children}
       {note && <p className="mt-5 text-ink/70 text-[1.02rem] max-w-3xl">{note}</p>}
     </motion.div>
@@ -305,4 +306,4 @@ function Board() {
   );
 }
 
-createRoot(document.getElementById('root')!).render(<StrictMode><StoreProvider><Board /></StoreProvider></StrictMode>);
+createRoot(document.getElementById('root')!).render(<StrictMode><StoreProvider><Board />{REVIEW && <Feedback place="board" />}</StoreProvider></StrictMode>);

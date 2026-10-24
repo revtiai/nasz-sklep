@@ -101,7 +101,7 @@ for (const [kind, list, vp, dpr, mob] of [['desktop', desktop, { width: 1440, he
     }
     await p.evaluate(() => window.scrollTo(0, 0));
     await p.waitForTimeout(1200);
-    await p.addStyleTag({ content: '[role=status]{display:none!important}' });
+    await p.addStyleTag({ content: '[role=status],[data-feedback]{display:none!important}' });
     await p.screenshot({ path: path.join(out, 'web', `${kind}-${name}.png`) });
     if (name === 'checkout' && kind === 'phone') {
       await p.getByRole('button', { name: 'Tomorrow' }).click().catch(() => {});

@@ -14,6 +14,7 @@ import RequestPage from './pages/Request.tsx';
 import Account from './pages/Account.tsx';
 import Checkout from './pages/Checkout.tsx';
 import { ShopOrders, TrackOrder } from './pages/Orders.tsx';
+import { Feedback, REVIEW } from './Feedback.tsx';
 
 export default function App() {
   return (
@@ -63,6 +64,7 @@ function Shell() {
       <BottomBar route={route} />
       <Basket />
       <Toast />
+      {REVIEW && <Feedback place="site" />}
     </div>
   );
 }
@@ -238,7 +240,7 @@ function Toast() {
   return (
     <AnimatePresence>
       {toast && (
-        <motion.div role="status" initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 40, opacity: 0 }} className="fixed z-[60] left-3 right-3 bottom-24 lg:bottom-6 lg:left-auto lg:right-6 lg:max-w-sm rounded-2xl bg-ink text-cream px-5 py-4 text-[1rem] shadow-2xl">
+        <motion.div role="status" initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 40, opacity: 0 }} className={`fixed z-[60] left-3 right-3 ${REVIEW ? "bottom-[176px] lg:bottom-24" : "bottom-24 lg:bottom-6"} lg:left-auto lg:right-6 lg:max-w-sm rounded-2xl bg-ink text-cream px-5 py-4 text-[1rem] shadow-2xl`}>
           {toast}
         </motion.div>
       )}
