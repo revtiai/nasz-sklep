@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<title>Nasz Sklep online shop: how it works on Shopify</title>
+<style>
+@font-face{font-family:B;font-weight:200 800;src:url(../node_modules/@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-wght-normal.woff2)}
+@font-face{font-family:B;font-weight:200 800;src:url(../node_modules/@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-ext-wght-normal.woff2);unicode-range:U+0100-024F}
+@font-face{font-family:I;font-weight:100 900;src:url(../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2)}
+@font-face{font-family:I;font-weight:100 900;src:url(../node_modules/@fontsource-variable/inter/files/inter-latin-ext-wght-normal.woff2);unicode-range:U+0100-024F}
+:root{--red:#D7141A;--deep:#8E0D11;--cream:#FFF8EF;--paper:#F6EEDF;--ink:#1C1917;--gold:#F4B400;--leaf:#2F6B35}
+@page{size:A4;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:I,Arial,sans-serif;color:var(--ink);background:#888;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.page{width:210mm;height:297mm;background:var(--cream);position:relative;overflow:hidden;page-break-after:always;margin:0 auto}
+.head{background:var(--red);color:var(--cream);padding:11mm 15mm 9mm}
+.head img{height:15mm}
+.head h1{font-family:B;font-weight:800;font-size:23pt;line-height:1.02;letter-spacing:-.02em;margin-top:5mm}
+.head p{font-size:11pt;opacity:.9;margin-top:3mm;max-width:150mm}
+.body{padding:9mm 15mm 0}
+.q{background:#fff;border-radius:6mm;padding:6mm 7mm;margin-bottom:4.5mm}
+.q h2{font-family:B;font-weight:800;font-size:15.5pt;letter-spacing:-.01em;display:flex;gap:3mm;align-items:center}
+.q h2 span{flex:none;width:9mm;height:9mm;border-radius:50%;background:var(--red);color:var(--cream);display:grid;place-items:center;font-size:11pt}
+.short{margin-top:2.5mm;font-weight:700;font-size:11.5pt;color:var(--leaf)}
+.q ul{margin-top:2.5mm;padding-left:5mm;display:grid;gap:1.6mm}
+.q li{font-size:10.4pt;line-height:1.4}
+.q li b{font-weight:700}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:2.5mm;margin-top:3.5mm}
+.steps div{background:var(--paper);border-radius:3.5mm;padding:3mm;font-size:9.6pt;line-height:1.3}
+.steps b{display:block;font-family:B;font-weight:800;font-size:11pt;color:var(--red)}
+.try{margin-top:3mm;font-size:9.8pt;color:#5b524a}
+.try b{color:var(--red)}
+.need{background:var(--ink);color:var(--cream);border-radius:6mm;padding:7mm}
+.need h2{font-family:B;font-weight:800;font-size:16pt}
+.need ol{margin-top:3mm;padding-left:5.5mm;display:grid;gap:2mm}
+.need li{font-size:11pt;line-height:1.4}
+.need li b{color:var(--gold)}
+.foot{position:absolute;left:15mm;right:15mm;bottom:9mm;display:flex;justify-content:space-between;font-size:8.6pt;color:#7a6f64;border-top:1px solid #e5d9c7;padding-top:3mm}
+</style>
+</head>
+<body>
+<section class="page">
+  <div class="head">
+    <img src="../public/assets/logo/nasz-sklep-logo-cream-southampton.png" alt="Nasz Sklep">
+    <h1>Your online shop on Shopify:<br>answers to your questions</h1>
+    <p>For Fathey and the team. Short answers first, then the detail. Everything here can be set up for you before the shop goes live.</p>
+  </div>
+  <div class="body">
+    <div class="q">
+      <h2><span>1</span>Can stock update itself?</h2>
+      <p class="short">Yes. When something sells out, the website can show it as sold out on its own.</p>
+      <ul>
+        <li>Shopify keeps a stock count for every product. When it reaches zero, the product shows as <b>sold out</b> online, and it comes back when you add stock.</li>
+        <li>If the shop's till is <b>Shopify POS</b> (Shopify's own till app), the shop and the website share one stock count, so a sale at the counter updates the website straight away.</li>
+        <li>If you use a different till or stock system, many of them (for example Epos Now) can connect to Shopify and keep stock in step. <b>Tell us which system you have</b> and we'll check it works.</li>
+        <li>Without a connection, staff update stock in the Shopify app. It takes seconds per product, and we'll show them the quickest way.</li>
+      </ul>
+    </div>
+    <div class="q">
+      <h2><span>2</span>How easy is it for the staff?</h2>
+      <p class="short">Most of the day is four taps on a phone or tablet.</p>
+      <div class="steps">
+        <div><b>1. New order</b>The phone pings with the order and what to pack.</div>
+        <div><b>2. Pack it</b>Pick the items, tick them off.</div>
+        <div><b>3. Ready</b>Tap “Ready for pickup”. The customer gets a message.</div>
+        <div><b>4. Done</b>Mark it collected or delivered.</div>
+      </div>
+      <ul>
+        <li><b>Prices and stock:</b> open the product in the Shopify app, change it, save. A photo can be taken on the phone.</li>
+        <li><b>New products:</b> we load everything from the spreadsheet in one go, so nobody types them in one by one.</li>
+        <li>We'll set it all up, give the team a short walkthrough and leave a one-page cheat sheet by the till.</li>
+      </ul>
+      <p class="try">Try it now: the demo's <b>Online orders</b> screen works the same way (revtiai.github.io/nasz-sklep/#/shop-orders).</p>
+    </div>
+  </div>
+  <div class="foot"><span>Nasz Sklep · 120 St Mary’s Road, Southampton SO14 0BL</span><span>1 of 2</span></div>
+</section>
+
+<section class="page">
+  <div class="body" style="padding-top:10mm">
+    <div class="q">
+      <h2><span>3</span>£15 delivery over 10 miles and a £40 minimum</h2>
+      <p class="short">Yes. Delivery by distance is built into Shopify. It's already working on the demo.</p>
+      <ul>
+        <li>Shopify's <b>local delivery</b> works out the distance from the shop to the customer's address. We set <b>free within 10 miles</b> and <b>£15 further out</b>, up to the furthest distance you want to deliver.</li>
+        <li>A minimum order can be set for delivery in Shopify itself. To make <b>£40 the minimum for every online order</b>, including collection, we add a small add-on app.</li>
+        <li>Try it on the demo: add items, go to the basket, choose <b>Home delivery</b> and type a postcode.</li>
+      </ul>
+    </div>
+    <div class="q">
+      <h2><span>4</span>Only taking orders at certain times</h2>
+      <p class="short">Yes, with an add-on app. Good idea while the team learns the system.</p>
+      <ul>
+        <li>Shopify doesn't do this on its own, so we add an app that sets your <b>online ordering hours</b> and the <b>collection and delivery time slots</b> customers can pick. It can also cap how many orders come in per slot.</li>
+        <li>You can widen the hours as the team gets more confident, or pause online orders on a busy day.</li>
+        <li>Try it on the demo: the <b>Online orders</b> screen has the hours and a pause button, and the website follows them.</li>
+      </ul>
+    </div>
+    <div class="q">
+      <h2><span>5</span>Can each member of staff log in?</h2>
+      <p class="short">Yes, depending on the Shopify plan.</p>
+      <ul>
+        <li>Shopify's <b>Basic</b> plan has the owner's login only, with no extra staff logins. A simple way to run it is one tablet signed in at the counter for packing orders.</li>
+        <li>The <b>Grow</b> plan includes up to 5 staff logins, so each person has their own and can only see what they need.</li>
+      </ul>
+    </div>
+    <div class="need">
+      <h2>What we need from you</h2>
+      <ol>
+        <li><b>The 10 categories</b> and the product list. The supplier's spreadsheet is perfect, or use the template we sent.</li>
+        <li><b>Which till or stock system</b> the shop uses, so we can check it connects to Shopify.</li>
+        <li><b>The hours you want to take online orders</b> to begin with, for example 10am to 6pm.</li>
+        <li><b>Delivery:</b> is it free within 10 miles, and what is the furthest you'd deliver?</li>
+      </ol>
+    </div>
+  </div>
+  <div class="foot"><span>Shopify facts checked against Shopify's UK pricing and help pages, October 2026.</span><span>2 of 2</span></div>
+</section>
+</body>
+</html>
