@@ -1,8 +1,8 @@
 import { SHOP } from './data.ts';
 
-// The shop's online ordering rules. Shopify can do the same: local delivery zones by radius
-// (free inside 10 miles, £15 beyond), a minimum order, and ordering hours through an add-on app.
-export const RULES = { minimum: 40, freeMiles: 10, maxMiles: 25, fee: 15 };
+// The shop's online ordering rules (confirmed by Jas, 26 Oct 2026). Shopify can do the same: local delivery zones by radius
+// (free inside 10 miles, £15 up to 20), a minimum order, and ordering hours through an add-on app.
+export const RULES = { minimum: 40, freeMiles: 10, maxMiles: 20, fee: 15 };
 
 export type Ordering = { paused: boolean; from: number; to: number };
 export const DEFAULT_ORDERING: Ordering = { paused: false, from: 10, to: 18 };

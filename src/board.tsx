@@ -273,7 +273,7 @@ function Board() {
             <p className="mt-5 text-sm font-semibold text-ink/55">Shop filters</p>
             <div className="mt-2 flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center min-h-12 rounded-full px-5 font-semibold border-2 border-red bg-red text-cream">Everything</span>
-              <span className="inline-flex items-center min-h-12 rounded-full px-5 font-semibold border-2 border-ink/15 bg-white">Smoked meats</span>
+              <span className="inline-flex items-center min-h-12 rounded-full px-5 font-semibold border-2 border-ink/15 bg-white">Deli &amp; Cold Meats</span>
             </div>
           </Block>
           <Block label="Form field">

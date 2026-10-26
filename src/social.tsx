@@ -115,7 +115,7 @@ export function Asset({ name }: { name: string }) {
     case 'post-trade':
       return (
         <Frame w={w} h={h} className="bg-red text-cream">
-          <Head eyebrow="Dla firm · For businesses" title={<>Hurt na kartony.</>} sub="Shops, cafés and restaurants: open a trade account." light big />
+          <Head eyebrow="Dla firm · For businesses" title={<>Hurt na kartony.</>} sub="Shops, cafés and restaurants: ask us about a trade account." light big />
           <div className="absolute left-1/2 -translate-x-1/2 top-[470px] w-[900px] h-[520px] rounded-[60px] overflow-hidden shadow-[0_50px_90px_-50px_rgba(0,0,0,.7)]">
             <img src={img('fb/meat-shelf.jpg')} alt="" className="w-full h-full object-cover" />
           </div>

@@ -8,7 +8,7 @@ const dist = path.resolve('dist');
 const base = fs.readFileSync(path.join(dist, 'index.html'), 'utf8');
 const pages = [
   { slug: '', route: '/', og: 'og-home', title: 'Nasz Sklep · Polish groceries in Southampton', desc: 'Polish and Eastern European groceries on St Mary’s Road, Southampton. Order online to collect or for local delivery, or buy by the case with a trade account.' },
-  { slug: 'shop', route: '/shop', og: 'og-shop', title: 'Shop · Nasz Sklep Southampton', desc: 'Smoked meats, fresh meat, fruit and veg, and the Polish brands you know. Buy by the item or by the case.' },
+  { slug: 'shop', route: '/shop', og: 'og-shop', title: 'Shop · Nasz Sklep Southampton', desc: 'Fresh meat, deli and cold meats, dairy, bakery, fruit and veg, frozen food and the Polish brands you know. Buy by the item or by the case.' },
   { slug: 'trade', route: '/trade', og: 'og-trade', title: 'Trade & bulk · Nasz Sklep Southampton', desc: 'Trade accounts for shops, cafés and restaurants: case prices, regular weekly orders and an account that remembers what you buy.' },
   { slug: 'request', route: '/request', og: 'og-request', title: 'Request a product · Nasz Sklep Southampton', desc: 'Can’t find it? Tell us the product and how many you need and we’ll order it in.' },
   { slug: 'account', route: '/account', og: 'og-account', title: 'My trade account · Nasz Sklep Southampton', desc: 'Past orders, regular orders and your usual list. Reorder in one tap.' },

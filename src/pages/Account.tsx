@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { Heart, History, LogOut, Pause, Play, Plus, RefreshCw, Settings, PackageSearch } from 'lucide-react';
+import { SHOP } from '../data.ts';
 import { gbp, product, unitPrice, useStore } from '../store.tsx';
 import { ProductImage, btn, ease, field, useT } from '../ui.tsx';
 import { PageHead, ProductCard } from './parts.tsx';
@@ -28,7 +29,7 @@ function SignIn({ onDemo }: { onDemo: () => void }) {
           <button className={btn.ink}>{t('Sign in', 'Zaloguj się')}</button>
           <div className="relative text-center text-ink/45 text-sm"><span className="bg-white px-3 relative z-10">{t('or', 'lub')}</span><span className="absolute inset-x-0 top-1/2 h-px bg-ink/10" /></div>
           <button type="button" onClick={onDemo} className={btn.red}>{t('Try the demo trade account', 'Wypróbuj konto demo')}</button>
-          <p className="text-[0.95rem] text-ink/60 text-center">{t('No account yet?', 'Nie masz konta?')} <a href="#/trade" className="font-bold text-red underline underline-offset-4">{t('Apply for trade', 'Załóż konto hurtowe')}</a></p>
+          <p className="text-[0.95rem] text-ink/60 text-center">{t('No account yet? Ask in the shop or call', 'Nie masz konta? Zapytaj w sklepie lub zadzwoń')} <a href={SHOP.phoneHref} className="font-bold text-red underline underline-offset-4 whitespace-nowrap">{SHOP.phone}</a></p>
         </form>
       </div>
     </>

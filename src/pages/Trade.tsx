@@ -1,14 +1,12 @@
-import { useState, type FormEvent } from 'react';
 import { motion } from 'motion/react';
-import { ArrowRight, BadgePercent, Building2, CalendarClock, Heart, History, PackageSearch, RefreshCw, Truck } from 'lucide-react';
+import { ArrowRight, BadgePercent, Heart, History, MapPin, PackageSearch, Phone, RefreshCw, Truck } from 'lucide-react';
+import { SHOP } from '../data.ts';
 import { go, useStore } from '../store.tsx';
-import { Eyebrow, Reveal, btn, field, img, useT } from '../ui.tsx';
+import { Eyebrow, Reveal, btn, img, useT } from '../ui.tsx';
 
 export default function Trade() {
   const t = useT();
-  const { account, signIn, say } = useStore();
-  const [sent, setSent] = useState(false);
-  const submit = (e: FormEvent) => { e.preventDefault(); setSent(true); say(t('Demo: in the live shop this goes straight to Nasz Sklep.', 'Demo: w prawdziwym sklepie wniosek trafi do Nasz Sklep.')); };
+  const { account, signIn } = useStore();
   const perks = [
     [BadgePercent, t('Case prices', 'Ceny za karton'), t('Lower prices when you buy whole cases.', 'Niższe ceny przy całych kartonach.')],
     [History, t('Your past orders', 'Historia zamówień'), t('See everything you’ve bought and reorder in one tap.', 'Wszystkie zakupy i ponowne zamówienie jednym kliknięciem.')],
@@ -26,12 +24,12 @@ export default function Trade() {
           <motion.h1 initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="mt-3 text-[clamp(2.6rem,7vw,5.2rem)] font-extrabold leading-[0.92] max-w-4xl">{t('Stocking a shop, café or kitchen?', 'Zaopatrujesz sklep, kawiarnię lub kuchnię?')}</motion.h1>
           <motion.p initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mt-5 text-[1.2rem] text-cream/85 max-w-2xl">{t('Buy Polish and Eastern European food by the case from a shop that has stocked it on St Mary’s Road for nearly ten years.', 'Kupuj polskie i wschodnioeuropejskie jedzenie na kartony w sklepie, który działa na St Mary’s Road od prawie dziesięciu lat.')}</motion.p>
           <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="mt-8 flex flex-col sm:flex-row gap-3">
-            <button onClick={() => document.getElementById('apply')?.scrollIntoView({ behavior: 'smooth' })} className={btn.red}>{t('Apply for a trade account', 'Załóż konto hurtowe')}</button>
             {account ? (
               <a href="#/account" className="press inline-flex items-center justify-center gap-2 rounded-full bg-cream text-ink font-bold min-h-14 px-7">{t('Go to my account', 'Moje konto')} <ArrowRight className="w-5 h-5" /></a>
             ) : (
               <button onClick={() => { signIn(); go('/account'); }} className="press inline-flex items-center justify-center gap-2 rounded-full bg-cream text-ink font-bold min-h-14 px-7">{t('Sign in (try the demo account)', 'Zaloguj (konto demo)')}</button>
             )}
+            <a href={SHOP.phoneHref} className="press inline-flex items-center justify-center gap-2 rounded-full border-2 border-cream/60 font-bold min-h-14 px-7"><Phone className="w-5 h-5" aria-hidden="true" />{t('Ask about trade:', 'Zapytaj o hurt:')} {SHOP.phone}</a>
           </motion.div>
         </div>
       </section>
@@ -51,42 +49,19 @@ export default function Trade() {
         </div>
       </section>
 
-      <section id="apply" className="scroll-mt-24 bg-gradient-to-b from-cream via-paper to-cream">
-        <div className="max-w-3xl mx-auto px-4 md:px-8 pt-10 md:pt-14 pb-12 md:pb-16">
-          <Reveal>
-            <h2 className="text-[clamp(2rem,5vw,3.2rem)] font-extrabold leading-[0.95]">{t('Apply for a trade account', 'Wniosek o konto hurtowe')}</h2>
-            <p className="mt-3 text-lg text-ink/70">{t('Takes about two minutes. We’ll call you to set things up.', 'Zajmie około dwóch minut. Zadzwonimy, aby wszystko ustawić.')}</p>
-          </Reveal>
-          {sent ? (
-            <Reveal className="mt-8 rounded-[2rem] bg-white p-8 text-center">
-              <CalendarClock className="w-14 h-14 mx-auto text-red" />
-              <p className="mt-4 text-2xl font-extrabold">{t('Thank you. Dziękujemy!', 'Dziękujemy!')}</p>
-              <p className="mt-2 text-lg text-ink/70">{t('We’ll be in touch about your trade account.', 'Odezwiemy się w sprawie konta hurtowego.')}</p>
-            </Reveal>
-          ) : (
-            <form onSubmit={submit} className="mt-8 grid gap-5">
-              <label className="grid gap-2 font-semibold text-[1.05rem]">{t('Business name', 'Nazwa firmy')}<input required autoComplete="organization" className={field} /></label>
-              <label className="grid gap-2 font-semibold text-[1.05rem]">{t('Your name', 'Imię i nazwisko')}<input required autoComplete="name" className={field} /></label>
-              <div className="grid sm:grid-cols-2 gap-5">
-                <label className="grid gap-2 font-semibold text-[1.05rem]">{t('Phone', 'Telefon')}<input required type="tel" inputMode="tel" autoComplete="tel" className={field} /></label>
-                <label className="grid gap-2 font-semibold text-[1.05rem]">Email<input type="email" autoComplete="email" className={field} /></label>
-              </div>
-              <fieldset className="grid gap-3">
-                <legend className="font-semibold text-[1.05rem] mb-2">{t('What kind of business?', 'Rodzaj działalności')}</legend>
-                <div className="grid sm:grid-cols-2 gap-3">
-                  {[t('Shop', 'Sklep'), t('Restaurant or café', 'Restauracja lub kawiarnia'), t('Caterer', 'Catering'), t('Other', 'Inne')].map((o, i) => (
-                    <label key={o} className="flex items-center gap-3 rounded-2xl bg-white border-2 border-ink/15 px-4 min-h-14 font-semibold has-[:checked]:border-red has-[:checked]:bg-red/5">
-                      <input type="radio" name="kind" defaultChecked={i === 0} className="w-5 h-5 accent-red" />{o}
-                    </label>
-                  ))}
-                </div>
-              </fieldset>
-              <label className="grid gap-2 font-semibold text-[1.05rem]">{t('What would you like to buy, and how often?', 'Co chcesz zamawiać i jak często?')}<textarea rows={4} className={`${field} py-3`} /></label>
-              <button className={btn.red}>{t('Send application', 'Wyślij wniosek')} <ArrowRight className="w-5 h-5" /></button>
-              <p className="text-sm text-ink/55 flex gap-2"><Building2 className="w-4 h-4 shrink-0 mt-0.5" />{t('Demo form. Nothing is sent yet.', 'Formularz demo. Nic nie jest wysyłane.')}</p>
-            </form>
-          )}
-        </div>
+      <section className="max-w-7xl mx-auto px-4 md:px-8 pt-8 md:pt-12 pb-12 md:pb-16">
+        <Reveal>
+          <div className="rounded-[2rem] bg-ink text-cream p-7 md:p-10 grid md:grid-cols-[1.2fr_auto] gap-6 md:gap-10 items-center">
+            <div>
+              <h2 className="text-[clamp(2rem,4.6vw,3rem)] font-extrabold leading-[0.95]">{t('Want a trade account?', 'Chcesz konto hurtowe?')}</h2>
+              <p className="mt-3 text-lg text-cream/80 max-w-xl">{t('Ask at the counter or give us a call. We set up every trade account ourselves, then you can order by the case online.', 'Zapytaj przy ladzie lub zadzwoń. Każde konto hurtowe zakładamy sami, potem zamawiasz kartony online.')}</p>
+            </div>
+            <div className="flex flex-col sm:flex-row md:flex-col gap-3">
+              <a href={SHOP.phoneHref} className={btn.red}><Phone className="w-5 h-5" aria-hidden="true" />{t('Call', 'Zadzwoń')} {SHOP.phone}</a>
+              <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(SHOP.mapQuery)}`} target="_blank" rel="noreferrer" className="press inline-flex items-center justify-center gap-2 rounded-full border-2 border-cream/50 font-bold min-h-14 px-7"><MapPin className="w-5 h-5" aria-hidden="true" />{SHOP.street}</a>
+            </div>
+          </div>
+        </Reveal>
       </section>
     </>
   );

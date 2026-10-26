@@ -1,7 +1,7 @@
 import { Fragment, lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
-import { ArrowLeft, ArrowRight, Building2, CalendarClock, Clock, MapPin, PackageSearch, Phone, RefreshCw, ShoppingBasket, Truck } from 'lucide-react';
-import { CATEGORIES, OFFER_IDS, PRODUCTS, SHOP } from '../data.ts';
+import { ArrowLeft, ArrowRight, Building2, CalendarClock, Clock, CookingPot, Croissant, EggFried, MapPin, Milk, PackageSearch, Phone, RefreshCw, ShoppingBasket, Snowflake, Sparkles, SprayCan, Truck, Wind, Wine, type LucideIcon } from 'lucide-react';
+import { CATEGORIES, OFFER_IDS, PRODUCTS, SHOP, type CategoryId } from '../data.ts';
 import { gbp, product, useStore } from '../store.tsx';
 import { Burst, Eyebrow, ProductImage, Reveal, Stagger, btn, ease, img, useT } from '../ui.tsx';
 import { ProductCard } from './parts.tsx';
@@ -200,6 +200,8 @@ function Doors() {
   );
 }
 
+const AISLE_ICONS: Partial<Record<CategoryId, LucideIcon>> = { dairy: Milk, bakery: Croissant, breakfast: EggFried, baking: CookingPot, frozen: Snowflake, household: SprayCan, alcohol: Wine, vapes: Wind, cosmetics: Sparkles };
+
 function Aisles() {
   const t = useT();
   const { lang } = useStore();
@@ -207,17 +209,27 @@ function Aisles() {
     <section className="px-4 md:px-8 pt-16 md:pt-24">
       <div className="max-w-7xl mx-auto">
         <Reveal><Eyebrow>{t('Browse the shop', 'Działy')}</Eyebrow><h2 className="mt-2 text-[clamp(2rem,5vw,3.2rem)] font-extrabold">{t('What are you after?', 'Czego szukasz?')}</h2></Reveal>
-        <Stagger as="ul" className="mt-8 flex lg:grid lg:grid-cols-7 gap-4 overflow-x-auto no-scrollbar -mx-4 px-4 lg:mx-0 lg:px-0 pb-2 snap-x">
-          {CATEGORIES.map((c) => (
-            <motion.li key={c.id} variants={{ hidden: { opacity: 0, y: 20, scale: 0.9 }, show: { opacity: 1, y: 0, scale: 1 } }} className="snap-start shrink-0 w-[30%] sm:w-[22%] lg:w-auto">
-              <a href={`#/shop/${c.id}`} className="group block text-center">
-                <span className="block aspect-square rounded-full overflow-hidden bg-white ring-4 ring-white shadow-[0_14px_30px_-20px_rgb(28_25_23/0.6)]">
-                  <img src={img(c.img)} alt="" loading="lazy" className={`w-full h-full ${c.img.startsWith('p/') ? 'object-contain p-3' : 'object-cover'} group-hover:scale-110 transition-transform duration-500`} style={{ objectPosition: c.pos }} />
-                </span>
-                <span className="mt-3 block font-display font-extrabold text-[1.05rem] md:text-lg leading-tight">{lang === 'pl' ? c.pl : c.en}</span>
-              </a>
-            </motion.li>
-          ))}
+        <Stagger as="ul" className="mt-8 grid grid-rows-2 grid-flow-col auto-cols-[28%] sm:auto-cols-[19%] md:auto-cols-[15%] gap-x-4 gap-y-6 overflow-x-auto no-scrollbar -mx-4 px-4 scroll-pl-4 pb-2 snap-x lg:grid-rows-none lg:grid-flow-row lg:grid-cols-8 lg:auto-cols-auto lg:gap-x-5 lg:gap-y-8 lg:mx-0 lg:px-0 lg:overflow-visible">
+          {CATEGORIES.map((c) => {
+            const Icon = AISLE_ICONS[c.id] ?? ShoppingBasket;
+            return (
+              <motion.li key={c.id} variants={{ hidden: { opacity: 0, y: 20, scale: 0.9 }, show: { opacity: 1, y: 0, scale: 1 } }} className="snap-start min-w-0">
+                <a href={`#/shop/${c.id}`} className="group block text-center">
+                  <span className="relative block aspect-square rounded-full overflow-hidden bg-white ring-4 ring-white shadow-[0_14px_30px_-20px_rgb(28_25_23/0.6)]">
+                    {c.img ? (
+                      <img src={img(c.img)} alt="" loading="lazy" className={`w-full h-full ${c.img.startsWith('p/') ? 'object-contain p-3' : 'object-cover'} group-hover:scale-110 transition-transform duration-500`} style={{ objectPosition: c.pos }} />
+                    ) : (
+                      <span className="absolute inset-0 grid place-items-center" style={{ background: c.tone?.[0], color: c.tone?.[1] }}>
+                        <Icon className="w-[44%] h-[44%] group-hover:scale-110 transition-transform duration-500" strokeWidth={1.5} aria-hidden="true" />
+                      </span>
+                    )}
+                    {c.age && <span className="absolute right-[9%] top-[9%] rounded-full bg-cream text-ink text-[0.7rem] font-bold px-1.5 py-0.5 leading-none">18+</span>}
+                  </span>
+                  <span className="mt-3 block font-display font-extrabold text-[0.98rem] md:text-[1.05rem] leading-tight">{lang === 'pl' ? c.pl : c.en}</span>
+                </a>
+              </motion.li>
+            );
+          })}
         </Stagger>
       </div>
     </section>
@@ -407,7 +419,7 @@ function RequestBand() {
 function useTradeSteps() {
   const t = useT();
   return [
-    { icon: Building2, h: t('Open a trade account', 'Załóż konto hurtowe'), b: t('Tell us about your shop, café or restaurant. We check and approve every account ourselves.', 'Opowiedz nam o swojej firmie. Każde konto zatwierdzamy sami.'), img: 'fb/meat-shelf.jpg' },
+    { icon: Building2, h: t('Ask for a trade account', 'Zapytaj o konto hurtowe'), b: t('Ask at the counter or give us a call. We set up every trade account ourselves.', 'Zapytaj przy ladzie lub zadzwoń. Każde konto hurtowe zakładamy sami.'), img: 'fb/meat-shelf.jpg' },
     { icon: ShoppingBasket, h: t('Order by the case', 'Zamawiaj na kartony'), b: t('See trade prices on every product and add whole cases in one tap.', 'Widzisz ceny hurtowe i dodajesz całe kartony jednym kliknięciem.'), img: 'fb/deli-kabanosy.jpg' },
     { icon: RefreshCw, h: t('Set up a regular order', 'Ustaw stałe zamówienie'), b: t('The same list every week or fortnight. Change, pause or skip it any time.', 'Ta sama lista co tydzień lub dwa. Zmień, wstrzymaj lub pomiń w każdej chwili.'), img: 'fb/veg-tomatoes.jpg' },
     { icon: CalendarClock, h: t('Collect, or delivery by arrangement', 'Odbiór lub dostawa po uzgodnieniu'), b: t('We pack your cases for pick-up at St Mary’s Road. Regular trade deliveries can be arranged.', 'Pakujemy kartony do odbioru na St Mary’s Road. Stałe dostawy hurtowe do uzgodnienia.'), img: 'fb/meat-cuts.jpg' },
@@ -440,7 +452,7 @@ function TradeStepsList() {
           </motion.li>
         ))}
       </ol>
-      <a href="#/trade" className={`${btn.red} mt-6`}>{t('Apply for a trade account', 'Załóż konto hurtowe')}<ArrowRight className="w-5 h-5" aria-hidden="true" /></a>
+      <a href="#/trade" className={`${btn.red} mt-6`}>{t('Trade and bulk', 'Hurt')}<ArrowRight className="w-5 h-5" aria-hidden="true" /></a>
     </section>
   );
 }

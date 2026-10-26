@@ -1,10 +1,10 @@
 import { useState, type FormEvent, type ReactNode } from 'react';
 import { motion } from 'motion/react';
-import { Banknote, Building2, Clock, CreditCard, MapPin, Store, Truck, UserRound, Users } from 'lucide-react';
+import { Banknote, Building2, Clock, CreditCard, IdCard, MapPin, Store, Truck, UserRound, Users } from 'lucide-react';
 import { gbp, product, unitPrice, useStore } from '../store.tsx';
 import { ProductImage, btn, field, useT } from '../ui.tsx';
 import { PageHead } from './parts.tsx';
-import { SHOP } from '../data.ts';
+import { SHOP, categoryOf } from '../data.ts';
 import { RULES, clock, orderingOpen, quoteDelivery, slotsFor, type DeliveryQuote } from '../rules.ts';
 
 function nextDays(n: number, lang: string) {
@@ -203,6 +203,7 @@ export default function Checkout() {
             {pay === 'online' ? t(`Pay ${gbp(grand)} and place order`, `Zapłać ${gbp(grand)} i zamów`) : delivered ? t('Place order, pay on delivery', 'Zamów, zapłać przy dostawie') : t('Place order, pay when collecting', 'Zamów, zapłać przy odbiorze')}
           </button>
           {blocker && open && <p className="mt-2 text-sm text-red font-semibold">{blocker}</p>}
+          {lines.some((l) => categoryOf(product(l.id).category).age) && <p className="mt-3 rounded-xl bg-cream px-3.5 py-2.5 text-sm font-semibold flex gap-2"><IdCard className="w-5 h-5 text-red shrink-0" aria-hidden="true" />{delivered ? t('Your order has 18+ items. We check ID when we deliver.', 'Zamówienie zawiera produkty 18+. Sprawdzimy dowód przy dostawie.') : t('Your order has 18+ items. Bring ID when you collect.', 'Zamówienie zawiera produkty 18+. Zabierz dowód przy odbiorze.')}</p>}
           <p className="mt-3 text-sm text-ink/55">{t(`Questions? Call the shop on ${SHOP.phone}.`, `Pytania? Zadzwoń: ${SHOP.phone}.`)} {t('Demo checkout: no payment is taken.', 'Kasa demo: nic nie jest pobierane.')}</p>
         </aside>
       </form>

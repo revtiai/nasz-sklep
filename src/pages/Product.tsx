@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
-import { ArrowLeft, Check, Heart, PackageSearch, Truck } from 'lucide-react';
-import { PRODUCTS } from '../data.ts';
+import { ArrowLeft, Check, Heart, IdCard, PackageSearch, Truck } from 'lucide-react';
+import { PRODUCTS, categoryOf } from '../data.ts';
+import { RULES } from '../rules.ts';
 import { gbp, useStore } from '../store.tsx';
 import { Burst, ProductImage, Stepper, btn, ease, useT } from '../ui.tsx';
 import { PriceSwitch, ProductCard } from './parts.tsx';
@@ -43,7 +44,8 @@ export default function ProductPage({ id }: { id?: string }) {
           </div>
           <ul className="mt-6 grid gap-3 text-[1.05rem]">
             <li className="flex gap-3"><Check className="w-6 h-6 text-leaf shrink-0" />{t('Order online, collect from 120 St Mary’s Road', 'Zamów online, odbierz na 120 St Mary’s Road')}</li>
-            <li className="flex gap-3"><Truck className="w-6 h-6 text-leaf shrink-0" />{t('Delivery: free within 10 miles, £15 up to 25 miles', 'Dostawa: za darmo do 10 mil, £15 do 25 mil')}</li>
+            <li className="flex gap-3"><Truck className="w-6 h-6 text-leaf shrink-0" />{t(`Delivery: free within ${RULES.freeMiles} miles, ${gbp(RULES.fee)} up to ${RULES.maxMiles} miles`, `Dostawa: za darmo do ${RULES.freeMiles} mil, ${gbp(RULES.fee)} do ${RULES.maxMiles} mil`)}</li>
+            {categoryOf(p.category).age && <li className="flex gap-3"><IdCard className="w-6 h-6 text-red shrink-0" />{t('18+ only. We check ID when you collect or when we deliver.', 'Tylko 18+. Sprawdzamy dowód przy odbiorze lub dostawie.')}</li>}
             <li className="flex gap-3"><PackageSearch className="w-6 h-6 text-leaf shrink-0" />{t('Need a larger amount?', 'Potrzebujesz więcej?')} <a href="#/request" className="font-bold text-red underline underline-offset-4">{t('Request it', 'Zamów')}</a></li>
           </ul>
           {p.source === 'facebook' && <p className="mt-6 text-sm text-ink/50">{t('Price taken from the shop’s Facebook post.', 'Cena z posta sklepu na Facebooku.')}</p>}

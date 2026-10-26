@@ -1,8 +1,9 @@
+import type { ReactNode } from 'react';
 import { motion } from 'motion/react';
-import { Plus } from 'lucide-react';
+import { Facebook, Plus } from 'lucide-react';
 import { gbp, useStore } from '../store.tsx';
 import { Burst, ProductImage, Stepper, staggerItem, useT } from '../ui.tsx';
-import type { Product } from '../data.ts';
+import { SHOP, categoryOf, type Product } from '../data.ts';
 
 export function ProductCard({ p, className = '' }: { p: Product; className?: string }) {
   const t = useT();
@@ -18,6 +19,7 @@ export function ProductCard({ p, className = '' }: { p: Product; className?: str
         {p.offer && !trade && (
           <Burst className="absolute right-2 top-2 w-[4.6rem] h-[4.6rem] text-[0.78rem] rotate-[8deg] group-hover:rotate-[-4deg] transition-transform duration-500">{lang === 'pl' ? p.offer.pl : p.offer.en}</Burst>
         )}
+        {categoryOf(p.category).age && <span className="absolute left-2 top-2 rounded-full bg-ink text-cream text-[0.8rem] font-bold px-2.5 py-1 leading-none">18+</span>}
       </a>
       <div className="p-4 flex flex-col flex-1">
         {p.brand && <p className="text-[0.75rem] font-bold uppercase tracking-[0.14em] text-ink/50">{p.brand}</p>}
@@ -56,12 +58,26 @@ export function PriceSwitch() {
   );
 }
 
-export function PageHead({ eyebrow, title, body }: { eyebrow: string; title: string; body?: string }) {
+export function PageHead({ eyebrow, title, body, side }: { eyebrow: string; title: string; body?: string; side?: ReactNode }) {
   return (
-    <div className="max-w-7xl mx-auto px-4 md:px-8 pt-8 md:pt-14 pb-6">
-      <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="font-bold text-[0.8rem] uppercase tracking-[0.2em] text-red">{eyebrow}</motion.p>
-      <motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="mt-2 text-[clamp(2.2rem,6vw,4rem)] font-extrabold leading-[0.95]">{title}</motion.h1>
-      {body && <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mt-4 text-lg text-ink/70 max-w-2xl">{body}</motion.p>}
+    <div className="max-w-7xl mx-auto px-4 md:px-8 pt-8 md:pt-14 pb-6 md:flex md:items-end md:justify-between md:gap-8">
+      <div>
+        <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="font-bold text-[0.8rem] uppercase tracking-[0.2em] text-red">{eyebrow}</motion.p>
+        <motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="mt-2 text-[clamp(2.2rem,6vw,4rem)] font-extrabold leading-[0.95]">{title}</motion.h1>
+        {body && <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mt-4 text-lg text-ink/70 max-w-2xl">{body}</motion.p>}
+      </div>
+      {side && <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="mt-5 md:mt-0 shrink-0">{side}</motion.div>}
     </div>
+  );
+}
+
+/** The shop's Facebook page, Nasz Sklep. */
+export function FacebookLink() {
+  const t = useT();
+  return (
+    <a href={SHOP.facebook} target="_blank" rel="noreferrer" className="press inline-flex items-center gap-3 rounded-full bg-white border-2 border-ink/15 hover:border-[#1877F2] pl-2 pr-5 min-h-14 font-bold">
+      <span className="w-10 h-10 rounded-full bg-[#1877F2] text-white grid place-items-center"><Facebook className="w-5 h-5 fill-current" strokeWidth={0} aria-hidden="true" /></span>
+      <span className="leading-tight text-left"><span className="block">{t('Nasz Sklep on Facebook', 'Nasz Sklep na Facebooku')}</span><span className="block text-[0.85rem] font-semibold text-ink/55">{t('Offers and new stock first', 'Promocje i nowości')}</span></span>
+    </a>
   );
 }
