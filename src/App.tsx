@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { Home as HomeIcon, MessageCircle, PackageSearch, Search, ShoppingBasket, User, X } from 'lucide-react';
+import { Home as HomeIcon, MessageCircle, PackageSearch, Phone, Search, ShoppingBasket, User, X } from 'lucide-react';
 import { StoreProvider, gbp, product, unitPrice, useRoute, useStore } from './store.tsx';
 import { ProductImage, Stepper, Wordmark, btn, ease, useT } from './ui.tsx';
 import Lenis from 'lenis';
 import { Southampton } from './Southampton.tsx';
 import { SHOP } from './data.ts';
+import { HOURS, RULES } from './rules.ts';
 import Home from './pages/Home.tsx';
 import Shop from './pages/Shop.tsx';
 import ProductPage from './pages/Product.tsx';
@@ -224,7 +225,13 @@ function Basket() {
             {lines.length > 0 && (
               <div className="border-t-2 border-ink/10 px-5 pt-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] grid gap-3">
                 <div className="flex justify-between items-baseline"><span className="text-lg font-semibold">{t('Total', 'Razem')}</span><span className="font-display font-extrabold text-3xl">{gbp(total)}</span></div>
-                <a href="#/checkout" onClick={() => setBasketOpen(false)} className={btn.red}>{t('Order for collection', 'Zamów z odbiorem')}</a>
+                {total < RULES.minimum && (
+                  <div>
+                    <div className="h-2 rounded-full bg-ink/10 overflow-hidden"><div className="h-full rounded-full bg-red origin-left" style={{ transform: `scaleX(${Math.min(1, total / RULES.minimum)})` }} /></div>
+                    <p className="mt-2 text-[0.95rem] font-semibold">{t(`Add ${gbp(RULES.minimum - total)} more. The minimum online order is ${gbp(RULES.minimum)}.`, `Dodaj jeszcze ${gbp(RULES.minimum - total)}. Minimalne zamówienie to ${gbp(RULES.minimum)}.`)}</p>
+                  </div>
+                )}
+                <a href="#/checkout" onClick={() => setBasketOpen(false)} className={btn.red}>{t('Checkout: collect or delivery', 'Do kasy: odbiór lub dostawa')}</a>
               </div>
             )}
           </motion.div>
@@ -250,6 +257,7 @@ function Toast() {
 
 function Footer() {
   const t = useT();
+  const { lang } = useStore();
   const links: [string, string][] = [
     ['#/shop', t('Shop', 'Sklep')],
     ['#/trade', t('Trade & bulk', 'Hurt')],
@@ -280,7 +288,11 @@ function Footer() {
           {SHOP.company} · {t('Company', 'Firma nr')} {SHOP.companyNumber} · {SHOP.street}, {SHOP.town} {SHOP.postcode}
         </p>
         <p className="mt-2 text-xs text-ink/45 max-w-2xl">{t('Design preview by Revti. Products and prices are examples. Pack photos from Open Food Facts (CC BY-SA).', 'Projekt demonstracyjny Revti. Produkty i ceny przykładowe. Zdjęcia opakowań: Open Food Facts (CC BY-SA).')}</p>
-        <a href={SHOP.messenger} target="_blank" rel="noreferrer" className="press mt-6 inline-flex items-center gap-2 rounded-full bg-white px-5 min-h-12 font-semibold border-2 border-ink/15"><MessageCircle className="w-5 h-5 text-red" />{t('Message the shop', 'Napisz do sklepu')}</a>
+        <p className="mt-4 text-[0.95rem] text-ink/70">{HOURS.map((h) => `${lang === 'pl' ? h.pl : h.en} ${h.open}–${h.close}`).join(' · ')}</p>
+        <div className="mt-5 flex flex-wrap justify-center gap-3">
+          <a href={SHOP.phoneHref} className="press inline-flex items-center gap-2 rounded-full bg-red text-cream px-5 min-h-12 font-bold"><Phone className="w-5 h-5" />{t('Call', 'Zadzwoń')} {SHOP.phone}</a>
+          <a href={SHOP.messenger} target="_blank" rel="noreferrer" className="press inline-flex items-center gap-2 rounded-full bg-white px-5 min-h-12 font-semibold border-2 border-ink/15"><MessageCircle className="w-5 h-5 text-red" />{t('Message the shop', 'Napisz do sklepu')}</a>
+        </div>
       </div>
       <Southampton className="relative flex-1 w-full min-h-[320px] mt-[-4vh] pointer-events-none" focusShopOnMobile />
       

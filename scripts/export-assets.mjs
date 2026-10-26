@@ -74,10 +74,11 @@ const desktop = [['home', '#/'], ['shop', '#/shop'], ['product', '#/product/kaba
 const phone = [['home', '#/'], ['shop', '#/shop'], ['product', '#/product/kabanosy'], ['checkout', '#/checkout'], ['order-ready', 'order'], ['trade-account', 'account'], ['request', '#/request']];
 for (const [kind, list, vp, dpr, mob] of [['desktop', desktop, { width: 1440, height: 900 }, 1, false], ['phone', phone, { width: 390, height: 844 }, 2, true]]) {
   const ctx = await b.newContext({ viewport: vp, deviceScaleFactor: dpr, isMobile: mob, hasTouch: mob, reducedMotion: 'reduce' });
-  await ctx.addInitScript(() => sessionStorage.setItem('ns-splash', '1'));
+  await ctx.addInitScript(() => { sessionStorage.setItem('ns-splash', '1'); localStorage.setItem('nasz-sklep-feedback-hint', '1'); });
   const p = await ctx.newPage();
+  await p.clock.setFixedTime(new Date(new Date().setHours(11, 0, 0, 0)));
   await p.goto(`${base}#/product/kabanosy`, { waitUntil: 'networkidle' });
-  await p.getByRole('button', { name: /Add to basket/ }).click();
+  for (let i = 0; i < 3; i++) await p.getByRole('button', { name: /Add to basket/ }).click();
   for (const [name, route] of list) {
     if (route === 'order') {
       await p.goto(`${base}#/checkout`, { waitUntil: 'networkidle' });

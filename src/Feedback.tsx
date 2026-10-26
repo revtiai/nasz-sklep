@@ -142,15 +142,15 @@ export function Feedback({ place }: { place: 'site' | 'board' }) {
     try { await navigator.clipboard.writeText(body); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch { /* ignore */ }
   };
 
-  const bottom = place === 'site' ? 'bottom-[104px] lg:bottom-6' : 'bottom-5';
+  const bottom = place === 'site' ? 'bottom-[104px] lg:bottom-6 lg:left-6 lg:right-auto' : 'bottom-5';
 
   return (
     <div data-feedback="" className="print:hidden">
       <AnimatePresence>
         {hint && !open && (
-          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }} className={`fixed right-4 ${place === 'site' ? 'bottom-[172px] lg:bottom-[92px]' : 'bottom-[88px]'} z-[70] max-w-[250px] rounded-2xl bg-ink text-cream px-4 py-3 text-[0.95rem] leading-snug shadow-xl`}>
+          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }} className={`fixed right-4 ${place === 'site' ? 'bottom-[172px] lg:bottom-[92px] lg:left-6 lg:right-auto' : 'bottom-[88px]'} z-[70] max-w-[250px] rounded-2xl bg-ink text-cream px-4 py-3 text-[0.95rem] leading-snug shadow-xl`}>
             Want something changed? Tap here and write it on the page.
-            <span className="absolute -bottom-1.5 right-8 w-3 h-3 rotate-45 bg-ink" />
+            <span className={`absolute -bottom-1.5 right-8 w-3 h-3 rotate-45 bg-ink ${place === 'site' ? 'lg:left-8 lg:right-auto' : ''}`} />
           </motion.div>
         )}
       </AnimatePresence>

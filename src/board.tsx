@@ -211,7 +211,7 @@ function Board() {
         </Block>
       </Chapter>
 
-      <Chapter id="desktop" n="03" title="Website: computer" intro="The online shop on a laptop or desktop. Order online, collect from St Mary’s Road; trade customers buy by the case.">
+      <Chapter id="desktop" n="03" title="Website: computer" intro="The online shop on a laptop or desktop. Order online to collect from St Mary’s Road or for local delivery; trade customers buy by the case.">
         <div className="grid md:grid-cols-2 gap-8 [&>*]:min-w-0">
           <Shot file="web/desktop-home.png" title="Home" size="1440 × 900" />
           <Shot file="web/desktop-shop.png" title="Shop" size="1440 × 900" />
@@ -224,7 +224,7 @@ function Board() {
 
       <Chapter id="phone" n="04" title="Website: phone" intro="The same shop on a phone: big buttons, a menu bar along the bottom, Polish or English in one tap, and a larger-text option." tone="bg-paper">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 [&>*]:min-w-0">
-          {[['web/phone-home.png', 'Home'], ['web/phone-shop.png', 'Shop'], ['web/phone-product.png', 'Product'], ['web/phone-checkout.png', 'Checkout: collect from the shop'], ['web/phone-order-ready.png', 'Order ready to collect'], ['web/phone-trade-account.png', 'Trade account'], ['web/phone-request.png', 'Request a product']].map(([f, t]) => (
+          {[['web/phone-home.png', 'Home'], ['web/phone-shop.png', 'Shop'], ['web/phone-product.png', 'Product'], ['web/phone-checkout.png', 'Checkout: collect or delivery'], ['web/phone-order-ready.png', 'Order ready to collect'], ['web/phone-trade-account.png', 'Trade account'], ['web/phone-request.png', 'Request a product']].map(([f, t]) => (
             <figure key={f} className="min-w-0">
               <div className="mx-auto w-full max-w-[250px] rounded-[2.2rem] bg-ink p-[7px] shadow-[0_30px_60px_-34px_rgba(0,0,0,.7)]">
                 <img src={A(f)} alt={t} loading="lazy" decoding="async" className="block w-full h-auto aspect-[390/844] rounded-[1.8rem] bg-cream" />
@@ -266,7 +266,7 @@ function Board() {
           <Block label="Labels">
             <p className="text-sm font-semibold text-ink/55">On orders</p>
             <div className="mt-2 flex flex-wrap items-center gap-2">
-              {[['Paid online', 'bg-leaf text-cream'], ['Take £8.98', 'bg-gold text-ink'], ['Trade', 'bg-ink text-cream'], ['Coming soon', 'bg-gold text-ink']].map(([l, c]) => (
+              {[['Paid online', 'bg-leaf text-cream'], ['Take £8.98', 'bg-gold text-ink'], ['Trade', 'bg-ink text-cream'], ['Free delivery', 'bg-gold text-ink']].map(([l, c]) => (
                 <span key={l} className={`inline-flex items-center min-h-8 rounded-full px-3 text-sm font-bold leading-none ${c}`}>{l}</span>
               ))}
             </div>

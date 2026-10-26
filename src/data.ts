@@ -9,6 +9,10 @@ export const SHOP = {
   mapQuery: 'Nasz Sklep, 120 St Marys Road, Southampton SO14 0BL',
   facebook: 'https://www.facebook.com/NaszSklepwSouthampton/',
   messenger: 'https://m.me/NaszSklepwSouthampton',
+  phone: '07816 359020',
+  phoneHref: 'tel:+447816359020',
+  lat: 50.910576,
+  lng: -1.399281,
 };
 
 export type CategoryId = 'deli' | 'meat' | 'veg' | 'pantry' | 'sweets' | 'drinks' | 'hot';

@@ -1,10 +1,11 @@
-import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Fragment, lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
-import { ArrowLeft, ArrowRight, Building2, CalendarClock, Clock, MapPin, PackageSearch, RefreshCw, ShoppingBasket, Truck } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Building2, CalendarClock, Clock, MapPin, PackageSearch, Phone, RefreshCw, ShoppingBasket, Truck } from 'lucide-react';
 import { CATEGORIES, OFFER_IDS, PRODUCTS, SHOP } from '../data.ts';
 import { gbp, product, useStore } from '../store.tsx';
 import { Burst, Eyebrow, ProductImage, Reveal, Stagger, btn, ease, img, useT } from '../ui.tsx';
 import { ProductCard } from './parts.tsx';
+import { HOURS } from '../rules.ts';
 const ShopMap = lazy(() => import('./ShopMap.tsx').then((m) => ({ default: m.ShopMap })));
 
 export default function Home() {
@@ -111,14 +112,14 @@ function Hero() {
             {HEADLINES.map((_, k) => <span key={k} className="h-1.5 rounded-full transition-all duration-500" style={{ width: k === h ? 28 : 8, background: k === h ? '#D7141A' : 'rgba(28,25,23,.18)' }} />)}
           </div>
           <motion.p initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55, duration: 0.7, ease }} className="mt-6 text-[1.2rem] md:text-[1.35rem] text-ink/75 max-w-xl leading-relaxed">
-            {t('Polish and Eastern European groceries from St Mary’s Road. Order online and collect from the shop, paying online or at the counter. Buying for a business? Order by the case.', 'Polskie i wschodnioeuropejskie produkty z St Mary’s Road. Zamów online i odbierz w sklepie, płacąc online lub przy ladzie. Kupujesz dla firmy? Zamawiaj na kartony.')}
+            {t('Polish and Eastern European groceries from St Mary’s Road. Order online to collect from the shop or have it delivered, paying online or on the day. Buying for a business? Order by the case.', 'Polskie i wschodnioeuropejskie produkty z St Mary’s Road. Zamów online z odbiorem w sklepie lub dostawą, płacąc online lub przy odbiorze. Kupujesz dla firmy? Zamawiaj na kartony.')}
           </motion.p>
           <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.65, duration: 0.7, ease }} className="mt-8 flex flex-col sm:flex-row gap-3">
             <a href="#/shop" className={btn.red}><ShoppingBasket className="w-5 h-5" aria-hidden="true" />{t('Start shopping', 'Zacznij zakupy')}</a>
             <a href="#/trade" className={btn.light}><Building2 className="w-5 h-5" aria-hidden="true" />{t('Trade & bulk buying', 'Zakupy hurtowe')}</a>
           </motion.div>
           <motion.ul initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.85 }} className="mt-8 grid sm:grid-cols-3 gap-3 text-[0.95rem] font-semibold">
-            {[[Clock, t('Open 7 days', 'Otwarte 7 dni')], [Truck, t('Order and collect', 'Zamów i odbierz')], [PackageSearch, t('We order in for you', 'Sprowadzimy na zamówienie')]].map(([I, s], k) => {
+            {[[Clock, t('Open 7 days', 'Otwarte 7 dni')], [Truck, t('Collect or delivery', 'Odbiór lub dostawa')], [PackageSearch, t('We order in for you', 'Sprowadzimy na zamówienie')]].map(([I, s], k) => {
               const Icon = I as typeof Clock;
               return <li key={k} className="flex items-center gap-2"><Icon className="w-5 h-5 text-red shrink-0" aria-hidden="true" />{s as string}</li>;
             })}
@@ -491,6 +492,7 @@ function TradeStepsPinned() {
 
 function Visit() {
   const t = useT();
+  const { lang } = useStore();
   return (
     <section className="px-4 md:px-8 pt-16 md:pt-24 pb-10">
       <div className="max-w-7xl mx-auto grid lg:grid-cols-[1fr_1.15fr] gap-6 items-stretch">
@@ -499,10 +501,10 @@ function Visit() {
             <Eyebrow light>{t('Visit the shop', 'Odwiedź sklep')}</Eyebrow>
             <h2 className="mt-3 text-[clamp(2.2rem,5vw,3.6rem)] font-extrabold leading-[0.95]">{t('Pop in, we’re open early till late.', 'Zapraszamy, otwarte od rana do wieczora.')}</h2>
             <p className="mt-6 text-xl font-semibold flex gap-2"><MapPin className="w-6 h-6 shrink-0 mt-1" aria-hidden="true" />{SHOP.street}, {SHOP.town} {SHOP.postcode}</p>
-            <p className="mt-3 text-lg flex gap-2"><Clock className="w-6 h-6 shrink-0 mt-0.5" aria-hidden="true" />{t('Open 7 days. Hours to confirm with the shop.', 'Otwarte 7 dni w tygodniu. Godziny do potwierdzenia.')}</p>
+            <div className="mt-3 text-lg flex gap-2"><Clock className="w-6 h-6 shrink-0 mt-0.5" aria-hidden="true" /><dl className="grid grid-cols-[auto_auto] gap-x-4 gap-y-0.5">{HOURS.map((h) => <Fragment key={h.en}><dt>{lang === 'pl' ? h.pl : h.en}</dt><dd className="font-semibold">{h.open}–{h.close}</dd></Fragment>)}</dl></div>
             <div className="mt-8 flex flex-col sm:flex-row gap-3">
               <a className="press inline-flex items-center justify-center gap-2 rounded-full bg-cream text-red font-bold min-h-14 px-7" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(SHOP.mapQuery)}`} target="_blank" rel="noreferrer">{t('Directions', 'Jak dojechać')} <ArrowRight className="w-5 h-5" /></a>
-              <a className="press inline-flex items-center justify-center gap-2 rounded-full border-2 border-cream/60 font-bold min-h-14 px-7" href={SHOP.messenger} target="_blank" rel="noreferrer">{t('Message us', 'Napisz do nas')}</a>
+              <a className="press inline-flex items-center justify-center gap-2 rounded-full border-2 border-cream/60 font-bold min-h-14 px-7" href={SHOP.phoneHref}><Phone className="w-5 h-5" aria-hidden="true" />{t('Call', 'Zadzwoń')} {SHOP.phone}</a>
             </div>
           </div>
         </Reveal>

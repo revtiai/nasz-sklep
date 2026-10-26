@@ -1,12 +1,14 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { DEMO_TRADE, PRODUCTS, type Order, type Product, type RequestItem, type Standing } from './data.ts';
+import { DEFAULT_ORDERING, type Ordering } from './rules.ts';
 
 export type Lang = 'en' | 'pl';
 export type Line = { id: string; qty: number; trade: boolean };
 export type ShopOrderStatus = 'new' | 'packing' | 'ready' | 'collected';
 export type ShopOrder = {
   id: string; code: string; placedAt: string; lines: Line[]; total: number;
-  method: 'collect' | 'trade';
+  method: 'collect' | 'delivery' | 'trade';
+  fee?: number; address?: string;
   when: string; collector: string; phone: string; forSomeoneElse: boolean;
   pay: 'online' | 'in-store'; paid: boolean; note: string; status: ShopOrderStatus; trade: boolean; business?: string;
 };
@@ -39,6 +41,8 @@ type Store = {
   setOrderStatus: (id: string, status: ShopOrderStatus, paid?: boolean) => void;
   toast: string | null;
   say: (s: string | null) => void;
+  ordering: Ordering;
+  setOrdering: (o: Ordering) => void;
 };
 
 const Ctx = createContext<Store | null>(null);
@@ -68,10 +72,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [bump, setBump] = useState(0);
   const [basketOpen, setBasketOpen] = useState(false);
   const [toast, say] = useState<string | null>(null);
+  const [ordering, setOrdering] = useState<Ordering>(saved.ordering ?? DEFAULT_ORDERING);
 
   useEffect(() => {
-    try { localStorage.setItem(KEY, JSON.stringify({ lang, big, trade, lines, account, guestRequests, orders })); } catch { /* private mode */ }
-  }, [lang, big, trade, lines, account, guestRequests, orders]);
+    try { localStorage.setItem(KEY, JSON.stringify({ lang, big, trade, lines, account, guestRequests, orders, ordering })); } catch { /* private mode */ }
+  }, [lang, big, trade, lines, account, guestRequests, orders, ordering]);
   useEffect(() => { document.documentElement.lang = lang === 'pl' ? 'pl' : 'en-GB'; }, [lang]);
   useEffect(() => { document.documentElement.style.fontSize = big ? '20px' : '18px'; }, [big]);
 
@@ -109,7 +114,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     const n = 10500 + Math.floor(Math.random() * 400);
     const order: ShopOrder = { ...o, id: `NS-${n}`, code: String(1000 + Math.floor(Math.random() * 9000)), placedAt: new Date().toISOString(), status: 'new' };
     setOrders((all) => [order, ...all]);
-    if (account) updateAccount((a) => ({ ...a, orders: [{ id: order.id, date: order.placedAt.slice(0, 10), items: o.lines.map((l) => ({ ...l })), total: o.total, method: o.method === 'collect' ? 'Collect from the shop' : 'Trade delivery', status: 'Received' }, ...a.orders] }));
+    if (account) updateAccount((a) => ({ ...a, orders: [{ id: order.id, date: order.placedAt.slice(0, 10), items: o.lines.map((l) => ({ ...l })), total: o.total, method: o.method === 'collect' ? 'Collect from the shop' : o.method === 'delivery' ? 'Home delivery' : 'Trade delivery', status: 'Received' }, ...a.orders] }));
     return order;
   };
   const setOrderStatus: Store['setOrderStatus'] = (id, status, paid) => setOrders((all) => all.map((o) => (o.id === id ? { ...o, status, paid: paid ?? o.paid } : o)));
@@ -117,7 +122,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const value: Store = {
     lang, setLang, big, setBig, trade, setTrade, lines, add, setQty, clear: () => setLines([]), count, total, bump,
     basketOpen, setBasketOpen, account, signIn, signOut, updateAccount,
-    requests: account ? account.requests : guestRequests, addRequest, orders, placeOrder, setOrderStatus, toast, say,
+    requests: account ? account.requests : guestRequests, addRequest, orders, placeOrder, setOrderStatus, toast, say, ordering, setOrdering,
   };
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

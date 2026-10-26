@@ -43,7 +43,7 @@ export default function ProductPage({ id }: { id?: string }) {
           </div>
           <ul className="mt-6 grid gap-3 text-[1.05rem]">
             <li className="flex gap-3"><Check className="w-6 h-6 text-leaf shrink-0" />{t('Order online, collect from 120 St Mary’s Road', 'Zamów online, odbierz na 120 St Mary’s Road')}</li>
-            <li className="flex gap-3"><Truck className="w-6 h-6 text-leaf shrink-0" />{t('Home delivery coming soon', 'Dostawa do domu wkrótce')}</li>
+            <li className="flex gap-3"><Truck className="w-6 h-6 text-leaf shrink-0" />{t('Delivery: free within 10 miles, £15 up to 25 miles', 'Dostawa: za darmo do 10 mil, £15 do 25 mil')}</li>
             <li className="flex gap-3"><PackageSearch className="w-6 h-6 text-leaf shrink-0" />{t('Need a larger amount?', 'Potrzebujesz więcej?')} <a href="#/request" className="font-bold text-red underline underline-offset-4">{t('Request it', 'Zamów')}</a></li>
           </ul>
           {p.source === 'facebook' && <p className="mt-6 text-sm text-ink/50">{t('Price taken from the shop’s Facebook post.', 'Cena z posta sklepu na Facebooku.')}</p>}
